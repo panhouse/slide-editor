@@ -1,0 +1,148 @@
+/* ============================================
+   PanHouse Theme
+   パンハウス標準テーマ（オレンジ×濃紺）
+   ============================================ */
+
+:root,
+[data-theme="panhouse"] {
+  /* Primary Colors */
+  --primary-color: #FF6600;
+  --primary-light: #FF8533;
+  --primary-dark: #CC5200;
+
+  /* Secondary Colors */
+  --secondary-color: #1E3A5F;
+  --secondary-light: #2D5A8A;
+  --secondary-dark: #0F1F33;
+
+  /* Text Colors */
+  --slide-text: #333333;
+  --text-muted: #666666;
+  --text-light: #999999;
+
+  /* Background Colors */
+  --slide-bg: #FFFFFF;
+  --bg-subtle: #F5F7FA;
+  --bg-hover: #EEF1F5;
+
+  /* Accent Colors */
+  --accent-success: #10B981;
+  --accent-warning: #F59E0B;
+  --accent-error: #EF4444;
+  --accent-info: #3B82F6;
+
+  /* Borders */
+  --border-color: #E5E7EB;
+  --border-dark: #D1D5DB;
+}
+
+/* ============================================
+   Theme-specific Overrides
+   ============================================ */
+
+/* Title Page */
+[data-theme="panhouse"] .slide-title-page {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFF5EB 100%);
+}
+
+[data-theme="panhouse"] .slide-title-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 50%, rgba(255, 102, 0, 0.05) 50%);
+}
+
+/* Section Page */
+[data-theme="panhouse"] .slide-section {
+  background: linear-gradient(135deg, #FF6600 0%, #FF8533 100%);
+}
+
+/* Closing Page */
+[data-theme="panhouse"] .slide-closing {
+  background: linear-gradient(135deg, #FF6600 0%, #1E3A5F 100%);
+}
+
+/* Table Header */
+[data-theme="panhouse"] .slide-table th {
+  background: #1E3A5F;
+}
+
+/* Cards */
+[data-theme="panhouse"] .slide-cards .card {
+  border-top: 3px solid #FF6600;
+}
+
+/* Timeline */
+[data-theme="panhouse"] .timeline-dot {
+  background: #FF6600;
+}
+
+/* Agenda */
+[data-theme="panhouse"] .agenda-item {
+  border-left-color: #FF6600;
+}
+
+/* ============================================
+   Additional Theme Variants
+   ============================================ */
+
+/* Blue Theme */
+[data-theme="blue"] {
+  --primary-color: #2563EB;
+  --primary-light: #3B82F6;
+  --primary-dark: #1D4ED8;
+  --secondary-color: #1E40AF;
+  --secondary-light: #3B82F6;
+  --secondary-dark: #1E3A8A;
+}
+
+[data-theme="blue"] .slide-section {
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+}
+
+[data-theme="blue"] .slide-closing {
+  background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%);
+}
+
+/* Green Theme */
+[data-theme="green"] {
+  --primary-color: #059669;
+  --primary-light: #10B981;
+  --primary-dark: #047857;
+  --secondary-color: #064E3B;
+  --secondary-light: #065F46;
+  --secondary-dark: #022C22;
+}
+
+[data-theme="green"] .slide-section {
+  background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+}
+
+[data-theme="green"] .slide-closing {
+  background: linear-gradient(135deg, #059669 0%, #064E3B 100%);
+}
+
+/* Minimal Theme */
+[data-theme="minimal"] {
+  --primary-color: #374151;
+  --primary-light: #4B5563;
+  --primary-dark: #1F2937;
+  --secondary-color: #6B7280;
+  --secondary-light: #9CA3AF;
+  --secondary-dark: #4B5563;
+}
+
+[data-theme="minimal"] .slide-section {
+  background: #374151;
+}
+
+[data-theme="minimal"] .slide-closing {
+  background: linear-gradient(135deg, #374151 0%, #1F2937 100%);
+}
+
+[data-theme="minimal"] .slide-title-page::before {
+  display: none;
+}

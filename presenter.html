@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>プレゼンテーション - 聴衆用画面</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/slide.css?v=8">
+  <link rel="stylesheet" href="css/themes/panhouse.css">
+  <link rel="stylesheet" href="css/themes/consulting.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .audience-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .audience-slide {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .audience-slide .slide {
+      position: absolute !important;
+      width: 960px !important;
+      height: 540px !important;
+      left: 50% !important;
+      top: 50% !important;
+      transform-origin: center center !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    .waiting-message {
+      color: #666;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .waiting-message h2 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      color: #888;
+    }
+
+    .waiting-message p {
+      font-size: 18px;
+      color: #555;
+    }
+
+    /* ヒント（マウス移動で表示） */
+    .audience-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    body:hover .audience-hint {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="audience-container">
+    <div class="audience-slide" id="audienceSlide">
+      <div class="waiting-message">
+        <h2>プレゼンテーション待機中</h2>
+        <p>発表者画面からスライドを操作してください</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="audience-hint">
+    F11でフルスクリーン | 発表者画面から操作
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // 親ウィンドウからのメッセージを受信
+    window.addEventListener('message', (event) => {
+      // 同一オリジンからのメッセージのみ受け付け
+      if (event.origin !== window.location.origin) return;
+
+      const { type, data } = event.data;
+
+      switch (type) {
+        case 'SLIDE_UPDATE':
+          updateSlide(data.html, data.theme);
+          break;
+        case 'PRESENTATION_END':
+          showWaitingMessage();
+          break;
+      }
+    });
+
+    function updateSlide(html, theme) {
+      const container = document.getElementById('audienceSlide');
+      container.innerHTML = html;
+
+      // テーマを適用
+      if (theme) {
+        document.body.setAttribute('data-theme', theme);
+      }
+
+      // スライドを画面いっぱいにスケール
+      requestAnimationFrame(() => {
+        scaleSlideToFit();
+      });
+    }
+
+    function scaleSlideToFit() {
+      const container = document.getElementById('audienceSlide');
+      const slideEl = container?.querySelector('.slide');
+
+      if (!container || !slideEl) return;
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const slideWidth = 960;
+      const slideHeight = 540;
+
+      // 画面に収まる最大のスケールを計算
+      const scaleX = viewportWidth / slideWidth;
+      const scaleY = viewportHeight / slideHeight;
+      const scale = Math.min(scaleX, scaleY);
+
+      slideEl.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    // ウィンドウリサイズ時に再スケール
+    window.addEventListener('resize', scaleSlideToFit);
+
+    function showWaitingMessage() {
+      const container = document.getElementById('audienceSlide');
+      container.innerHTML = `
+        <div class="waiting-message">
+          <h2>プレゼンテーション終了</h2>
+          <p>このウィンドウを閉じてください</p>
+        </div>
+      `;
+    }
+
+    // 親ウィンドウに準備完了を通知
+    if (window.opener) {
+      window.opener.postMessage({ type: 'AUDIENCE_READY' }, window.location.origin);
+    }
+
+    // ウィンドウが閉じられる時に親に通知
+    window.addEventListener('beforeunload', () => {
+      if (window.opener) {
+        window.opener.postMessage({ type: 'AUDIENCE_CLOSED' }, window.location.origin);
+      }
+    });
+  </script>
+</body>
+</html>

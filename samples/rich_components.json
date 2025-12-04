@@ -1,0 +1,231 @@
+{
+  "settings": {
+    "title": "リッチコンポーネント デモ",
+    "theme": "panhouse",
+    "companyName": "株式会社パンハウス"
+  },
+  "slides": [
+    {
+      "type": "title",
+      "title": "リッチコンポーネント\nデモンストレーション",
+      "subtitle": "コンサル品質のスライドを簡単に作成",
+      "date": "2024年12月"
+    },
+    {
+      "type": "process",
+      "title": "プロジェクト推進プロセス",
+      "subhead": "4つのフェーズで確実に成果を創出",
+      "steps": [
+        {
+          "title": "現状分析",
+          "desc": "課題の特定と\n優先順位付け"
+        },
+        {
+          "title": "戦略立案",
+          "desc": "目標設定と\nロードマップ策定"
+        },
+        {
+          "title": "実行",
+          "desc": "アジャイルでの\n段階的導入"
+        },
+        {
+          "title": "定着・改善",
+          "desc": "効果測定と\n継続的改善"
+        }
+      ]
+    },
+    {
+      "type": "matrix",
+      "title": "優先度マトリクス",
+      "xAxis": {
+        "label": "実現容易性",
+        "low": "難",
+        "high": "易"
+      },
+      "yAxis": {
+        "label": "インパクト",
+        "low": "小",
+        "high": "大"
+      },
+      "quadrants": [
+        {
+          "title": "最優先で実行",
+          "items": ["生成AI研修の全社展開", "業務自動化ツール導入"]
+        },
+        {
+          "title": "計画的に推進",
+          "items": ["基幹システム刷新", "データ基盤構築"]
+        },
+        {
+          "title": "クイックウィン",
+          "items": ["議事録自動作成", "メール文面生成"]
+        },
+        {
+          "title": "様子見・保留",
+          "items": ["完全自動化", "AI独自開発"]
+        }
+      ]
+    },
+    {
+      "type": "kpi",
+      "title": "導入効果サマリー",
+      "subhead": "AI研修実施後3ヶ月の成果",
+      "metrics": [
+        {
+          "icon": "📈",
+          "value": "42",
+          "format": "percent",
+          "label": "業務効率向上",
+          "change": 15,
+          "changeLabel": "前月比"
+        },
+        {
+          "icon": "⏱️",
+          "value": "1,250",
+          "label": "月間削減時間",
+          "desc": "全社合計",
+          "change": 8
+        },
+        {
+          "icon": "💰",
+          "value": "2,400",
+          "format": "number",
+          "label": "万円コスト削減",
+          "change": 22
+        },
+        {
+          "icon": "😊",
+          "value": "4.6",
+          "label": "従業員満足度",
+          "desc": "5点満点",
+          "change": 0.4
+        }
+      ]
+    },
+    {
+      "type": "roadmap",
+      "title": "AI活用ロードマップ",
+      "subhead": "2024年度の推進計画",
+      "periods": ["Q1", "Q2", "Q3", "Q4"],
+      "phases": [
+        {
+          "title": "基礎研修",
+          "start": "Q1",
+          "end": "Q1",
+          "status": "completed",
+          "milestone": "全社員受講完了"
+        },
+        {
+          "title": "実践研修",
+          "start": "Q2",
+          "end": "Q2",
+          "status": "completed",
+          "milestone": "部門別カスタマイズ"
+        },
+        {
+          "title": "ツール導入",
+          "start": "Q2",
+          "end": "Q3",
+          "status": "in-progress",
+          "milestone": "3部門で本格運用"
+        },
+        {
+          "title": "全社展開",
+          "start": "Q3",
+          "end": "Q4",
+          "status": "pending",
+          "milestone": "全部門への水平展開"
+        },
+        {
+          "title": "効果検証",
+          "start": "Q4",
+          "end": "Q4",
+          "status": "pending",
+          "milestone": "ROI算出・次年度計画"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "style": "callout",
+      "text": "AIは人を置き換えるものではなく、人の可能性を拡張するものである",
+      "author": "代表取締役 岡本弘野",
+      "desc": "パンハウスは「人とAIの協働」を理念に、実践的なAI人材育成を支援しています"
+    },
+    {
+      "type": "quote",
+      "style": "stat",
+      "text": "93%",
+      "author": "受講者満足度",
+      "desc": "「業務に役立つ」と回答した受講者の割合。実践的なカリキュラムが高い評価を得ています。"
+    },
+    {
+      "type": "icon-cards",
+      "title": "サービスの特長",
+      "subhead": "なぜパンハウスが選ばれるのか",
+      "columns": 3,
+      "items": [
+        {
+          "icon": "🎯",
+          "title": "実践重視のカリキュラム",
+          "desc": "座学だけでなく、実際の業務課題を題材にしたハンズオン研修"
+        },
+        {
+          "icon": "🔧",
+          "title": "カスタマイズ対応",
+          "desc": "業界・業務に合わせた研修内容のカスタマイズが可能"
+        },
+        {
+          "icon": "📊",
+          "title": "効果測定・可視化",
+          "desc": "導入前後の効果を定量的に測定し、ROIを明確化"
+        },
+        {
+          "icon": "🤝",
+          "title": "伴走型サポート",
+          "desc": "研修後も定着支援・フォローアップを継続実施"
+        },
+        {
+          "icon": "💡",
+          "title": "最新技術キャッチアップ",
+          "desc": "松尾研発の知見を活かした最先端AIトレンドの提供"
+        },
+        {
+          "icon": "💰",
+          "title": "助成金活用支援",
+          "desc": "最大75%の助成金を活用した費用対効果の高い導入"
+        }
+      ]
+    },
+    {
+      "type": "icon-cards",
+      "title": "導入ステップ",
+      "layout": "vertical",
+      "items": [
+        {
+          "icon": "1",
+          "title": "無料相談・ヒアリング",
+          "desc": "現状の課題や目標をお聞きし、最適な研修プランをご提案します",
+          "color": "#FF6600"
+        },
+        {
+          "icon": "2",
+          "title": "カリキュラム設計",
+          "desc": "貴社の業務内容に合わせたオリジナルカリキュラムを作成します",
+          "color": "#1E3A5F"
+        },
+        {
+          "icon": "3",
+          "title": "研修実施・フォローアップ",
+          "desc": "実践的な研修を実施し、定着までサポートします",
+          "color": "#10B981"
+        }
+      ]
+    },
+    {
+      "type": "closing",
+      "title": "ご清聴ありがとうございました",
+      "subtitle": "株式会社パンハウス"
+    }
+  ]
+}

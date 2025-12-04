@@ -1,0 +1,1340 @@
+/* ============================================
+   PanHouse Slide Editor - Consulting Theme
+   Premium Professional Design
+
+   Design Philosophy:
+   - 紺 + グレー + 白 + 1アクセントのみ
+   - 数字で語る（大きく、太く）
+   - 余白は情報である
+   - 構造が見える
+   ============================================ */
+
+/* ============================================
+   Theme Variables
+   ============================================ */
+[data-theme="consulting"] {
+  /* Primary - Deep Navy（これだけで勝負） */
+  --primary-color: #1e3a5f;
+  --primary-light: #2c5282;
+  --primary-dark: #1a365d;
+
+  /* Accent - 1色だけ（使用は最小限） */
+  --accent-color: #2b6cb0;
+  --accent-green: #276749;
+  --accent-red: #c53030;
+
+  /* Grays - 7段階のグレースケール */
+  --gray-900: #1a202c;
+  --gray-800: #2d3748;
+  --gray-700: #4a5568;
+  --gray-600: #718096;
+  --gray-500: #a0aec0;
+  --gray-400: #cbd5e0;
+  --gray-300: #e2e8f0;
+  --gray-200: #edf2f7;
+  --gray-100: #f7fafc;
+  --gray-50: #fafbfc;
+
+  /* Semantic Colors */
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-700);
+  --text-muted: var(--gray-600);
+  --text-light: var(--gray-500);
+  --border-color: var(--gray-300);
+  --border-light: var(--gray-200);
+  --bg-subtle: var(--gray-100);
+  --slide-bg: #FFFFFF;
+
+  /* Typography */
+  --font-heading: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+
+  /* Spacing - 8px Grid System */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+}
+
+/* ============================================
+   Base Slide - Consulting Style
+   ============================================ */
+[data-theme="consulting"] .slide {
+  font-family: var(--font-body);
+  background: var(--slide-bg);
+  color: var(--text-primary);
+  padding: var(--spacing-12) var(--spacing-16) var(--spacing-10);
+  position: relative;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 上部に極細のアクセントライン */
+[data-theme="consulting"] .slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--spacing-16);
+  right: var(--spacing-16);
+  height: 2px;
+  background: var(--primary-color);
+}
+
+/* ============================================
+   Typography - 徹底的に洗練
+   ============================================ */
+
+/* Main Title - Action Title（結論を述べる） */
+[data-theme="consulting"] .slide-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--gray-900);
+  margin: 0;
+  letter-spacing: -0.025em;
+  padding-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-2);
+  border-bottom: none;
+}
+
+/* Subhead - Context Line */
+[data-theme="consulting"] .slide-subtitle,
+[data-theme="consulting"] .slide-subhead {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-500);
+  margin-top: 0;
+  margin-bottom: var(--spacing-8);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   Title Slide - Executive Style
+   ============================================ */
+[data-theme="consulting"] .slide-title-page {
+  background: var(--slide-bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* タイトルスライドは上部ラインなし */
+[data-theme="consulting"] .slide-title-page::before {
+  display: none;
+}
+
+/* 装飾なし - クリーン */
+[data-theme="consulting"] .slide-title-page::after {
+  display: none;
+}
+
+[data-theme="consulting"] .slide-title-page .main-title {
+  font-family: var(--font-heading);
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-6);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+[data-theme="consulting"] .slide-title-page .main-subtitle {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--gray-600);
+  margin-bottom: var(--spacing-10);
+  padding-bottom: 0;
+  border-bottom: none;
+  line-height: 1.5;
+}
+
+[data-theme="consulting"] .slide-title-page .meta-info {
+  font-size: 11px;
+  color: var(--gray-500);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ============================================
+   Section Slide - ミニマルな区切り
+   番号が上、タイトルが下
+   ============================================ */
+[data-theme="consulting"] .slide-section {
+  background: var(--primary-color);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="consulting"] .slide-section::before {
+  display: none;
+}
+
+[data-theme="consulting"] .slide-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 番号 - 上に配置、控えめに */
+[data-theme="consulting"] .slide-section .section-number {
+  color: rgba(255, 255, 255, 0.15);
+  font-family: var(--font-body);
+  font-size: 100px;
+  font-weight: 700;
+  line-height: 1;
+  order: -1;
+  margin-bottom: var(--spacing-12);
+}
+
+/* タイトル - 下に配置 */
+[data-theme="consulting"] .slide-section .section-title {
+  font-family: var(--font-heading);
+  color: white;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  order: 1;
+  margin-top: var(--spacing-8);
+}
+
+/* ============================================
+   Content Slide - Clean Bullet Points
+   ============================================ */
+[data-theme="consulting"] .slide-content-page .points-list {
+  max-width: 85%;
+}
+
+[data-theme="consulting"] .slide-content-page .points-list li {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: var(--spacing-4);
+  padding-left: var(--spacing-6);
+  color: var(--gray-800);
+  position: relative;
+}
+
+/* シンプルな四角ドット - テキストの中央に配置 */
+[data-theme="consulting"] .slide-content-page .points-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: var(--primary-color);
+  border-radius: 0;
+}
+
+/* 強調部分（ハイフン以前）を太字に見せる */
+[data-theme="consulting"] .slide-content-page .points-list li strong,
+[data-theme="consulting"] .slide-content-page .points-list li b {
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+/* Numbered list */
+[data-theme="consulting"] .slide-content-page .points-list.numbered li {
+  padding-left: var(--spacing-8);
+}
+
+[data-theme="consulting"] .slide-content-page .points-list.numbered li::before {
+  content: counter(list-counter);
+  width: 20px;
+  height: 20px;
+  background: var(--primary-color);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  top: 4px;
+}
+
+/* ============================================
+   Table - Professional Data Display
+   ============================================ */
+[data-theme="consulting"] .slide-table table {
+  font-size: 13px;
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+[data-theme="consulting"] .slide-table th {
+  background: var(--bg-subtle);
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--primary-color);
+  text-align: left;
+}
+
+[data-theme="consulting"] .slide-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+}
+
+[data-theme="consulting"] .slide-table tr:last-child td {
+  border-bottom: none;
+}
+
+[data-theme="consulting"] .slide-table tr:nth-child(even) {
+  background: transparent;
+}
+
+[data-theme="consulting"] .slide-table tr:hover td {
+  background: var(--bg-subtle);
+}
+
+/* ============================================
+   Compare Slide - Two Column Analysis
+   ============================================ */
+[data-theme="consulting"] .slide-compare .compare-column {
+  background: var(--slide-bg);
+  border-radius: 0;
+  border-top: none;
+  border-left: 3px solid var(--primary-color);
+  padding: 0 24px;
+}
+
+[data-theme="consulting"] .slide-compare .compare-column:last-child {
+  border-left-color: var(--accent-color);
+}
+
+[data-theme="consulting"] .slide-compare .compare-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="consulting"] .slide-compare .compare-list li {
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+[data-theme="consulting"] .slide-compare .compare-list li::before {
+  content: '—';
+  color: var(--text-muted);
+  background: none;
+  width: auto;
+  height: auto;
+}
+
+/* ============================================
+   Cards - Minimal & Functional
+   ============================================ */
+[data-theme="consulting"] .slide-cards .card {
+  background: var(--slide-bg);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 20px 0;
+  border-top: none;
+  border-bottom: 1px solid var(--border-light);
+}
+
+[data-theme="consulting"] .slide-cards .card:last-child {
+  border-bottom: none;
+}
+
+[data-theme="consulting"] .slide-cards .card-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 6px;
+}
+
+[data-theme="consulting"] .slide-cards .card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================
+   Process Flow - Professional Steps
+   ============================================ */
+[data-theme="consulting"] .process-step {
+  background: transparent;
+  border: none;
+  border-top: none;
+  border-radius: 0;
+  padding: 0;
+  text-align: center;
+}
+
+[data-theme="consulting"] .process-step-number {
+  background: var(--primary-color);
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 auto 12px;
+}
+
+[data-theme="consulting"] .process-step-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+[data-theme="consulting"] .process-step-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+[data-theme="consulting"] .process-arrow {
+  color: var(--border-color);
+  font-size: 20px;
+}
+
+/* ============================================
+   Matrix - Strategic Analysis
+   ============================================ */
+[data-theme="consulting"] .matrix-quadrant {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+[data-theme="consulting"] .matrix-quadrant-primary {
+  border-left: 4px solid var(--accent-green);
+}
+
+[data-theme="consulting"] .matrix-quadrant-secondary {
+  border-left: 4px solid var(--primary-color);
+}
+
+[data-theme="consulting"] .matrix-quadrant-tertiary {
+  border-left: 4px solid var(--accent-orange);
+}
+
+[data-theme="consulting"] .matrix-quadrant-quaternary {
+  border-left: 4px solid var(--text-light);
+}
+
+[data-theme="consulting"] .quadrant-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  color: var(--primary-color);
+}
+
+[data-theme="consulting"] .quadrant-items li {
+  font-size: 12px;
+}
+
+/* ============================================
+   KPI Dashboard - 数字で語る
+   コンサル資料の核心
+   ============================================ */
+[data-theme="consulting"] .kpi-container {
+  display: flex;
+  gap: var(--spacing-8);
+  justify-content: flex-start;
+}
+
+[data-theme="consulting"] .kpi-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: var(--spacing-6) 0;
+  border-top: none;
+  border-left: none;
+  text-align: left;
+  flex: 1;
+  max-width: 200px;
+}
+
+/* アイコンは控えめに */
+[data-theme="consulting"] .kpi-icon {
+  font-size: 20px;
+  margin-bottom: var(--spacing-3);
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+/* 数値 - これが主役 */
+[data-theme="consulting"] .kpi-value {
+  font-family: var(--font-heading);
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: var(--spacing-2);
+}
+
+/* ラベル - 控えめに */
+[data-theme="consulting"] .kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: var(--spacing-1);
+}
+
+/* 説明 */
+[data-theme="consulting"] .kpi-desc {
+  font-size: 12px;
+  color: var(--gray-600);
+  line-height: 1.4;
+  margin-top: var(--spacing-2);
+}
+
+/* 変化率 */
+[data-theme="consulting"] .kpi-change {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 0;
+  padding: 0;
+  margin-top: var(--spacing-2);
+  display: inline-block;
+  background: transparent;
+  border: none;
+}
+
+[data-theme="consulting"] .kpi-change.positive {
+  color: var(--accent-green);
+}
+
+[data-theme="consulting"] .kpi-change.positive::before {
+  content: '↑ ';
+}
+
+[data-theme="consulting"] .kpi-change.negative {
+  color: var(--accent-red);
+}
+
+[data-theme="consulting"] .kpi-change.negative::before {
+  content: '↓ ';
+}
+
+/* ============================================
+   Roadmap - Timeline Planning
+   ============================================ */
+[data-theme="consulting"] .roadmap-period {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="consulting"] .phase-title {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+[data-theme="consulting"] .roadmap-bar.status-completed {
+  background: var(--accent-green);
+}
+
+[data-theme="consulting"] .roadmap-bar.status-in-progress {
+  background: var(--primary-color);
+}
+
+[data-theme="consulting"] .roadmap-bar.status-pending {
+  background: var(--text-light);
+}
+
+/* ============================================
+   Quote - Executive Callout
+   ============================================ */
+[data-theme="consulting"] .slide-quote {
+  background: var(--slide-bg);
+}
+
+[data-theme="consulting"] .quote-mark {
+  color: var(--primary-color);
+  opacity: 0.2;
+  font-size: 72px;
+}
+
+[data-theme="consulting"] .quote-text {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--primary-color);
+}
+
+[data-theme="consulting"] .quote-source {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Stat style - Big numbers */
+[data-theme="consulting"] .slide-quote.quote-style-stat .quote-text {
+  font-family: var(--font-body);
+  font-size: 64px;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--primary-color);
+}
+
+/* Callout style - Takeaway box */
+[data-theme="consulting"] .slide-quote.quote-style-callout .quote-container {
+  background: var(--bg-subtle);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 32px 40px;
+}
+
+/* ============================================
+   Icon Cards - Feature Highlights
+   ============================================ */
+[data-theme="consulting"] .icon-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+[data-theme="consulting"] .icon-card-icon {
+  background: transparent;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  font-size: 28px;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+[data-theme="consulting"] .icon-card-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 6px;
+}
+
+[data-theme="consulting"] .icon-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================
+   Takeaway Box - Key Message Highlight
+   A consulting essential!
+   ============================================ */
+[data-theme="consulting"] .takeaway-box {
+  background: var(--bg-subtle);
+  border-left: 5px solid var(--primary-color);
+  padding: 16px 20px;
+  margin-top: 24px;
+  border-radius: 0 4px 4px 0;
+}
+
+[data-theme="consulting"] .takeaway-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--primary-color);
+  margin-bottom: 6px;
+}
+
+[data-theme="consulting"] .takeaway-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Footer - Subtle & Professional
+   ============================================ */
+[data-theme="consulting"] .slide-footer-company,
+[data-theme="consulting"] .slide-footer-page {
+  font-size: 10px;
+  color: var(--text-light);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="consulting"] .slide-footer-page {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   Timeline - Clean & Minimal
+   ============================================ */
+[data-theme="consulting"] .slide-timeline .timeline-line {
+  background: var(--border-color);
+  height: 3px;
+}
+
+[data-theme="consulting"] .slide-timeline .timeline-dot {
+  background: var(--primary-color);
+  width: 16px;
+  height: 16px;
+  border: 3px solid white;
+}
+
+[data-theme="consulting"] .slide-timeline .timeline-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+[data-theme="consulting"] .slide-timeline .timeline-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   Closing Slide - Professional Finish
+   ============================================ */
+[data-theme="consulting"] .slide-closing {
+  background: var(--primary-color);
+}
+
+[data-theme="consulting"] .slide-closing .closing-title {
+  font-family: var(--font-heading);
+  font-size: 38px;
+  color: white;
+}
+
+[data-theme="consulting"] .slide-closing .closing-subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================
+   Agenda - Executive Summary Style
+   ============================================ */
+[data-theme="consulting"] .slide-agenda .agenda-item {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 14px 18px;
+}
+
+[data-theme="consulting"] .slide-agenda .agenda-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 32px;
+}
+
+[data-theme="consulting"] .slide-agenda .agenda-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* ============================================
+   Status Badges - Professional Indicators
+   ============================================ */
+[data-theme="consulting"] .status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+}
+
+[data-theme="consulting"] .status-badge.completed {
+  background: #E6F4EA;
+  color: var(--accent-green);
+}
+
+[data-theme="consulting"] .status-badge.in-progress {
+  background: #FFF3E0;
+  color: var(--accent-orange);
+}
+
+[data-theme="consulting"] .status-badge.pending {
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+}
+
+/* ============================================
+   Source Line - 出典表記（コンサル必須）
+   ============================================ */
+[data-theme="consulting"] .source-line {
+  position: absolute;
+  bottom: var(--spacing-4);
+  left: var(--spacing-16);
+  right: var(--spacing-16);
+  font-size: 9px;
+  color: var(--gray-500);
+  border-top: 1px solid var(--gray-200);
+  padding-top: var(--spacing-2);
+  line-height: 1.3;
+}
+
+[data-theme="consulting"] .source-line::before {
+  content: 'Source: ';
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+/* ============================================
+   Annotation Markers - 丸数字コールアウト
+   ============================================ */
+[data-theme="consulting"] .annotation {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--primary-color);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 50%;
+  vertical-align: super;
+  margin: 0 2px;
+}
+
+[data-theme="consulting"] .annotation.outline {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+[data-theme="consulting"] .annotation.large {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+/* ============================================
+   Key Insight Box - 重要ポイント強調
+   ============================================ */
+[data-theme="consulting"] .key-insight {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-4);
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  border-left: 4px solid var(--primary-color);
+  padding: var(--spacing-4) var(--spacing-5);
+  margin: var(--spacing-4) 0;
+}
+
+[data-theme="consulting"] .key-insight::before {
+  content: '▶';
+  color: var(--primary-color);
+  font-size: 10px;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+[data-theme="consulting"] .key-insight-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-800);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Progress Indicator - 水平バー
+   ============================================ */
+[data-theme="consulting"] .progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--gray-200);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: var(--spacing-2) 0;
+}
+
+[data-theme="consulting"] .progress-fill {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+[data-theme="consulting"] .progress-fill.success {
+  background: var(--accent-green);
+}
+
+[data-theme="consulting"] .progress-fill.warning {
+  background: #D69E2E;
+}
+
+[data-theme="consulting"] .progress-fill.danger {
+  background: var(--accent-red);
+}
+
+/* ============================================
+   Before/After Comparison
+   ============================================ */
+[data-theme="consulting"] .before-after {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--spacing-6);
+  align-items: start;
+}
+
+[data-theme="consulting"] .before-after-column {
+  padding: var(--spacing-4);
+}
+
+[data-theme="consulting"] .before-after-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: var(--spacing-3);
+}
+
+[data-theme="consulting"] .before-label {
+  color: var(--accent-red);
+}
+
+[data-theme="consulting"] .after-label {
+  color: var(--accent-green);
+}
+
+[data-theme="consulting"] .before-after-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  font-size: 24px;
+  padding-top: var(--spacing-8);
+}
+
+[data-theme="consulting"] .before-after-arrow::after {
+  content: '→';
+}
+
+/* ============================================
+   Two Column with Divider
+   ============================================ */
+[data-theme="consulting"] .two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-8);
+  position: relative;
+}
+
+[data-theme="consulting"] .two-column.with-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--gray-200);
+  transform: translateX(-50%);
+}
+
+[data-theme="consulting"] .two-column .column {
+  padding: 0 var(--spacing-4);
+}
+
+[data-theme="consulting"] .two-column .column-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* ============================================
+   Metric Highlight - インライン数値強調
+   ============================================ */
+[data-theme="consulting"] .metric-highlight {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--spacing-1);
+}
+
+[data-theme="consulting"] .metric-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
+  letter-spacing: -0.02em;
+}
+
+[data-theme="consulting"] .metric-unit {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+[data-theme="consulting"] .metric-label {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-left: var(--spacing-2);
+}
+
+/* ============================================
+   Refined Image Treatment
+   ============================================ */
+[data-theme="consulting"] .slide-image img {
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="consulting"] .slide-image.no-shadow img {
+  box-shadow: none;
+}
+
+[data-theme="consulting"] .slide-image.bordered img {
+  border: 1px solid var(--gray-200);
+}
+
+[data-theme="consulting"] .image-caption {
+  font-size: 10px;
+  color: var(--gray-500);
+  text-align: center;
+  margin-top: var(--spacing-2);
+  font-style: italic;
+}
+
+/* ============================================
+   Checklist - タスクリスト風
+   ============================================ */
+[data-theme="consulting"] .checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) 0;
+  font-size: 14px;
+  color: var(--gray-800);
+}
+
+[data-theme="consulting"] .checklist li::before {
+  content: '☐';
+  color: var(--gray-400);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+[data-theme="consulting"] .checklist li.checked::before {
+  content: '☑';
+  color: var(--accent-green);
+}
+
+[data-theme="consulting"] .checklist li.checked {
+  color: var(--gray-600);
+}
+
+/* ============================================
+   Label/Tag Styles
+   ============================================ */
+[data-theme="consulting"] .label {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+}
+
+[data-theme="consulting"] .label-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+[data-theme="consulting"] .label-secondary {
+  background: var(--gray-200);
+  color: var(--gray-700);
+}
+
+[data-theme="consulting"] .label-success {
+  background: #C6F6D5;
+  color: #22543D;
+}
+
+[data-theme="consulting"] .label-warning {
+  background: #FEFCBF;
+  color: #744210;
+}
+
+[data-theme="consulting"] .label-danger {
+  background: #FED7D7;
+  color: #742A2A;
+}
+
+/* ============================================
+   Refined Table - より洗練
+   ============================================ */
+[data-theme="consulting"] .slide-table.minimal th {
+  background: transparent;
+  border-bottom: 2px solid var(--gray-900);
+  color: var(--gray-900);
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+[data-theme="consulting"] .slide-table.minimal td {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+[data-theme="consulting"] .slide-table.minimal tbody tr:last-child td {
+  border-bottom: 2px solid var(--gray-900);
+}
+
+/* 数値セルの右寄せ */
+[data-theme="consulting"] .slide-table td.numeric {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+/* 強調行 */
+[data-theme="consulting"] .slide-table tr.highlight td {
+  background: var(--gray-50);
+  font-weight: 600;
+}
+
+/* ============================================
+   Chart Styling (Chart.js)
+   ============================================ */
+[data-theme="consulting"] .chart-container {
+  position: relative;
+  padding: var(--spacing-4);
+}
+
+[data-theme="consulting"] .chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-3);
+}
+
+/* ============================================
+   Subtle Animations & Transitions
+   ============================================ */
+[data-theme="consulting"] .slide-cards .card,
+[data-theme="consulting"] .kpi-card,
+[data-theme="consulting"] .icon-card,
+[data-theme="consulting"] .slide-table tr {
+  transition: background-color 0.2s ease;
+}
+
+[data-theme="consulting"] .slide-cards .card:hover,
+[data-theme="consulting"] .icon-card:hover {
+  background: var(--gray-50);
+}
+
+/* ============================================
+   Selection State - 選択時のスタイル
+   ============================================ */
+[data-theme="consulting"] ::selection {
+  background: rgba(30, 58, 95, 0.15);
+  color: inherit;
+}
+
+/* ============================================
+   Print Optimization
+   ============================================ */
+@media print {
+  [data-theme="consulting"] .slide {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  [data-theme="consulting"] .slide::before {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  [data-theme="consulting"] .kpi-value,
+  [data-theme="consulting"] .primary-color {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* ============================================
+   Footnote Style - 脚注
+   ============================================ */
+[data-theme="consulting"] .footnote {
+  font-size: 9px;
+  color: var(--gray-500);
+  line-height: 1.4;
+  margin-top: var(--spacing-6);
+  padding-top: var(--spacing-2);
+  border-top: 1px solid var(--gray-200);
+}
+
+[data-theme="consulting"] .footnote sup {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+/* ============================================
+   Divider Line - セクション区切り
+   ============================================ */
+[data-theme="consulting"] .divider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: var(--spacing-6) 0;
+}
+
+[data-theme="consulting"] .divider.thick {
+  height: 2px;
+  background: var(--gray-300);
+}
+
+[data-theme="consulting"] .divider.accent {
+  background: var(--primary-color);
+}
+
+/* ============================================
+   Pull Quote - 引用強調
+   ============================================ */
+[data-theme="consulting"] .pull-quote {
+  font-size: 20px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--gray-700);
+  border-left: 4px solid var(--primary-color);
+  padding-left: var(--spacing-5);
+  margin: var(--spacing-6) 0;
+  line-height: 1.5;
+}
+
+/* ============================================
+   Recommendation Box - 推奨事項
+   ============================================ */
+[data-theme="consulting"] .recommendation {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-left: 4px solid var(--accent-green);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-radius: 0 4px 4px 0;
+}
+
+[data-theme="consulting"] .recommendation-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-green);
+  margin-bottom: var(--spacing-2);
+}
+
+[data-theme="consulting"] .recommendation-text {
+  font-size: 14px;
+  color: var(--gray-800);
+  line-height: 1.6;
+}
+
+/* ============================================
+   Risk/Opportunity Indicators
+   ============================================ */
+[data-theme="consulting"] .risk-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+[data-theme="consulting"] .risk-indicator::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+[data-theme="consulting"] .risk-high::before {
+  background: var(--accent-red);
+}
+
+[data-theme="consulting"] .risk-medium::before {
+  background: #D69E2E;
+}
+
+[data-theme="consulting"] .risk-low::before {
+  background: var(--accent-green);
+}
+
+/* ============================================
+   Fine-tuned Spacing & Polish
+   ============================================ */
+
+/* コンテンツエリアの最大幅 */
+[data-theme="consulting"] .slide-content-page .content-area {
+  max-width: 90%;
+}
+
+/* スライドタイトル後の余白調整 */
+[data-theme="consulting"] .slide-title + .content-area,
+[data-theme="consulting"] .slide-title + .points-list {
+  margin-top: var(--spacing-8);
+}
+
+/* KPIコンテナは特に大きな数字があるため、十分な余白を確保 */
+[data-theme="consulting"] .slide-title + .kpi-container,
+[data-theme="consulting"] .kpi-container {
+  margin-top: var(--spacing-12);
+}
+
+/* 隣接要素間の余白 */
+[data-theme="consulting"] .points-list + .takeaway-box {
+  margin-top: var(--spacing-8);
+}
+
+[data-theme="consulting"] .kpi-container + .source-line {
+  margin-top: var(--spacing-8);
+}
