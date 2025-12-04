@@ -148,20 +148,40 @@ function loadDemoData() {
 /**
  * SupabaseのスライドIDからJSONを読み込む
  * ?id=xxx でアクセス
+ *
+ * Supabase REST APIを直接呼び出す（ANON KEYはパブリックなのでフロントエンドで使用可能）
  */
 async function loadFromSupabase(slideId) {
   Utils.log('App', `Loading from Supabase: ${slideId}`);
 
+  // Supabase設定（ANON KEYはパブリックキーなのでフロントエンドで使用OK）
+  const SUPABASE_URL = 'https://fwykesvqriophaagunki.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3eWtlc3ZxcmlvcGhhYWd1bmtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4MzcyNzgsImV4cCI6MjA4MDQxMzI3OH0.8gPGdAJ2b-hfqgtB_Cc_POWZ9vNs6X0lvST57-fDq9o';
+
   try {
-    // APIエンドポイントからJSONを取得
-    const apiUrl = `/api/slides/${slideId}`;
-    const response = await fetch(apiUrl);
+    // Supabase REST APIを直接呼び出し
+    const apiUrl = `${SUPABASE_URL}/rest/v1/slides?id=eq.${slideId}&select=slide_json`;
+    const response = await fetch(apiUrl, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const rows = await response.json();
+
+    if (!rows || rows.length === 0) {
+      throw new Error('Slide not found');
+    }
+
+    // slide_jsonをパース
+    const slideJson = rows[0].slide_json;
+    const data = typeof slideJson === 'string' ? JSON.parse(slideJson) : slideJson;
+
     SlideManager.loadFromJson(data);
 
     // テーマを適用
