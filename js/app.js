@@ -146,13 +146,58 @@ function loadDemoData() {
 }
 
 /**
+ * SupabaseのスライドIDからJSONを読み込む
+ * ?id=xxx でアクセス
+ */
+async function loadFromSupabase(slideId) {
+  Utils.log('App', `Loading from Supabase: ${slideId}`);
+
+  try {
+    // APIエンドポイントからJSONを取得
+    const apiUrl = `/api/slides/${slideId}`;
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    SlideManager.loadFromJson(data);
+
+    // テーマを適用
+    if (data.settings?.theme) {
+      ThemeManager.setTheme(data.settings.theme);
+      const themeSelect = document.getElementById('themeSelect');
+      if (themeSelect) {
+        themeSelect.value = data.settings.theme;
+      }
+    }
+
+    Utils.log('App', `Loaded from Supabase: ${slideId}`);
+    return true;
+  } catch (error) {
+    Utils.log('App', `Failed to load from Supabase: ${error.message}`, 'error');
+    console.error('Supabase load error:', error);
+    alert(`スライドの読み込みに失敗しました。\n\nID: ${slideId}\nエラー: ${error.message}`);
+    return false;
+  }
+}
+
+/**
  * URLクエリパラメータからJSONファイルを読み込む
  * 例: ?load=samples/proposal.json
  * 例: ?load=/path/to/file.json (HTTPサーバー経由の場合)
+ * 例: ?id=xxx (SupabaseからスライドIDで読み込む)
  */
 async function loadFromQueryParam() {
   const urlParams = new URLSearchParams(window.location.search);
   const loadPath = urlParams.get('load');
+  const slideId = urlParams.get('id');
+
+  // ?id=xxx でSupabaseからロード
+  if (slideId) {
+    return await loadFromSupabase(slideId);
+  }
 
   if (!loadPath) {
     return false;

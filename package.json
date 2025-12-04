@@ -1,0 +1,10 @@
+{
+  "name": "slide-editor",
+  "version": "1.0.0",
+  "description": "JSON-based slide editor",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@vercel/node": "^3.0.0"
+  }
+}
