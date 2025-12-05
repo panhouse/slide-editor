@@ -1,0 +1,25 @@
+# Editor files (keep viewer only)
+index.html
+presenter.html
+
+# Editor-specific JS
+js/editor/
+js/export/
+
+# Documentation
+*.md
+docs/
+
+# Samples (hide from public)
+samples/
+
+# Templates
+templates/
+
+# API (backend)
+api/
+
+# Development files
+.git/
+.gitignore
+package.json
