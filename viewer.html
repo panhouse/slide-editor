@@ -169,10 +169,9 @@
         slideCanvas.classList.add(`theme-${settings.theme}`);
       }
 
-      // Render
-      const renderer = new SlideRenderer();
+      // Render (SlideRenderer is already instantiated as window.SlideRenderer)
       slideCanvas.innerHTML = '';
-      const content = renderer.render(slideData);
+      const content = SlideRenderer.render(slideData);
       slideCanvas.appendChild(content);
 
       // Update navigation
