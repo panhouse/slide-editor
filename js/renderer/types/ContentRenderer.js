@@ -28,10 +28,11 @@ class ContentRenderer extends BaseRenderer {
     content.className = 'slide-content';
 
     // ポイント（箇条書き）- 編集可能
-    // points が空配列の場合も items をフォールバックとして使用
+    // points/bullets/items のいずれかを使用
     const hasPoints = slide.data.points && slide.data.points.length > 0;
-    const points = hasPoints ? slide.data.points : (slide.data.items || []);
-    const fieldName = hasPoints ? 'points' : 'items';
+    const hasBullets = slide.data.bullets && slide.data.bullets.length > 0;
+    const points = hasPoints ? slide.data.points : (hasBullets ? slide.data.bullets : (slide.data.items || []));
+    const fieldName = hasPoints ? 'points' : (hasBullets ? 'bullets' : 'items');
     const list = this.renderEditableList(points, fieldName, slide.id);
     content.appendChild(list);
 
