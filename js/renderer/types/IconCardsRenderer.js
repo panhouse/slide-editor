@@ -29,7 +29,12 @@ class IconCardsRenderer extends BaseRenderer {
     container.className = 'icon-cards-container';
 
     const items = slide.data.items || [];
-    const columns = slide.data.columns || Math.min(items.length, 4);
+    // レイアウト設計:
+    // - 1〜3個: 横並び（1〜3列）
+    // - 4個: 2x2グリッド（見やすさ重視）
+    // - 5個以上: icon-cardsではなく別コンポーネント（cards, content等）を推奨
+    const defaultColumns = items.length === 4 ? 2 : Math.min(items.length, 4);
+    const columns = slide.data.columns || defaultColumns;
     const layout = slide.data.layout || 'grid'; // grid, horizontal, vertical
 
     container.classList.add(`layout-${layout}`);

@@ -13,7 +13,9 @@ class JsonParser {
       'table', 'compare', 'cards', 'timeline', 'process',
       'quote', 'faq', 'progress', 'cycle', 'diagram', 'imageText',
       // リッチコンポーネント
-      'matrix', 'kpi', 'roadmap', 'icon-cards'
+      'matrix', 'kpi', 'roadmap', 'icon-cards',
+      // 統合報告書コンポーネント
+      'philosophy', 'ceoMessage', 'businessModel'
     ];
 
     // 各タイプの必須フィールド
@@ -38,7 +40,11 @@ class JsonParser {
       matrix: ['title', 'quadrants'],
       kpi: ['title', 'metrics'],
       roadmap: ['title', 'phases'],
-      'icon-cards': ['title', 'items']
+      'icon-cards': ['title', 'items'],
+      // 統合報告書コンポーネント
+      philosophy: ['title'],
+      ceoMessage: ['title'],
+      businessModel: ['title']
     };
 
     // フィールド名のエイリアス（よくある間違いを自動変換）
@@ -193,8 +199,15 @@ class JsonParser {
    * @returns {Object}
    */
   normalize(data) {
+    // トップレベルのtitle/subtitleをsettingsにマージ
+    const settingsWithTitle = {
+      ...data.settings,
+      title: data.title || data.settings?.title,
+      subtitle: data.subtitle || data.settings?.subtitle
+    };
+
     const normalized = {
-      settings: this.normalizeSettings(data.settings),
+      settings: this.normalizeSettings(settingsWithTitle),
       slides: data.slides.map(slide => this.normalizeSlide(slide))
     };
 
@@ -361,6 +374,30 @@ class JsonParser {
       'icon-cards': {
         title: '',
         items: []
+      },
+      // 統合報告書コンポーネント
+      philosophy: {
+        title: '',
+        subhead: '',
+        purpose: { title: 'パーパス', text: '' },
+        mission: { title: 'ミッション', text: '' },
+        vision: { title: 'ビジョン', text: '' },
+        kpis: []
+      },
+      ceoMessage: {
+        title: '',
+        ceo: { name: '', title: '', photo: '' },
+        quote: '',
+        sections: [],
+        body: ''
+      },
+      businessModel: {
+        title: '',
+        subhead: '',
+        inputs: [],
+        processes: [],
+        outputs: [],
+        description: ''
       }
     };
 

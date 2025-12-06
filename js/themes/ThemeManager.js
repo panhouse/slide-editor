@@ -19,10 +19,10 @@ class ThemeManager {
         primary: '#003366',
         secondary: '#0052A3'
       },
-      minimal: {
-        name: 'Minimal',
-        primary: '#374151',
-        secondary: '#6B7280'
+      'integrated-report': {
+        name: '統合報告書',
+        primary: '#7B7B73',
+        secondary: '#C84B31'
       }
     };
   }

@@ -264,9 +264,17 @@ class SlideManager {
    * @param {Object} data
    */
   loadFromJson(data) {
+    // トップレベルのtitle/subtitleをsettingsにマージ
+    // metadata.title, data.title, data.settings.title の順で優先
+    const settingsWithTitle = {
+      ...data.settings,
+      title: data.metadata?.title || data.title || data.settings?.title,
+      subtitle: data.metadata?.subtitle || data.subtitle || data.settings?.subtitle
+    };
+
     // 設定を読み込み
-    if (data.settings) {
-      this.settings = Utils.deepMerge(this.settings, data.settings);
+    if (settingsWithTitle.title || settingsWithTitle.subtitle || data.settings) {
+      this.settings = Utils.deepMerge(this.settings, settingsWithTitle);
     }
 
     // スライドを読み込み

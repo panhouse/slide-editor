@@ -2,6 +2,50 @@
 
 Claude Codeがスライド用JSONを生成する際の必須ルール。
 
+## スライド作成ワークフロー（必読）
+
+### 1. JSONファイルの保存場所
+- `project/product/slide/samples/` にJSONファイルを作成する
+- ファイル名は英語スネークケース（例: `ai_agent_automation_2025.json`）
+
+### 2. URL発行方法
+- **ドロップダウン（index.html）への追加は不要**
+- `?load=` パラメータで直接JSONファイルを読み込む
+
+```
+http://localhost:8080/index.html?load=samples/ファイル名.json
+```
+
+### 3. 完成後に提示するURL
+スライド作成完了時は、以下の形式でURLを岡本さんに提示する：
+```
+http://localhost:8080/index.html?load=samples/作成したファイル名.json
+```
+
+### 4. サーバー起動（必要な場合）
+```bash
+cd /Users/okamotohirono/work/project/product/slide && python -m http.server 8080
+```
+
+### 5. JSONファイルの基本構造（必須）
+PDFエクスポート時のファイル名に`metadata.title`が使われるため、以下の形式を必ず使用する：
+
+```json
+{
+  "metadata": {
+    "title": "プレゼンタイトル",
+    "author": "株式会社パンハウス",
+    "created": "2025-12-06",
+    "theme": "consulting"
+  },
+  "slides": [...]
+}
+```
+
+**注意**: `metadata`を省略すると、PDFファイル名が「無題のプレゼンテーション_YYYYMMDD.pdf」になってしまう。
+
+---
+
 ## 最重要ルール
 
 ### 話した内容を漏れなく入れる
@@ -127,12 +171,19 @@ quote:      text
 ```
 
 ### icon-cards（アイコン付きカード）
+
+**アイテム数によるレイアウト:**
+| 個数 | レイアウト | 備考 |
+|-----|----------|------|
+| 1〜3 | 横並び | 推奨 |
+| 4 | 2×2グリッド | 推奨 |
+| 5以上 | — | **非推奨**。`cards` や `content` を使う |
+
 ```json
 {
   "type": "icon-cards",
   "title": "タイトル",
   "subhead": "サブヘッド",
-  "columns": 3,
   "items": [
     { "icon": "🎯", "title": "カードタイトル", "desc": "説明文" },
     { "icon": "📊", "title": "カードタイトル", "desc": "説明文" },
@@ -141,6 +192,8 @@ quote:      text
   "speakerNotes": "ノート"
 }
 ```
+
+**オプション:** `"columns": 4` を指定すると、4アイテムでも4列（横並び）に強制可能。
 
 ### process（プロセスフロー）
 ```json
@@ -223,4 +276,4 @@ quote:      text
 - [ ] JSONとして有効か（カンマの位置等）
 
 ---
-最終更新: 2025-12-04
+最終更新: 2025-12-05

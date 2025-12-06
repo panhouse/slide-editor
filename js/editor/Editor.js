@@ -42,9 +42,6 @@ class Editor {
     // テーマセレクターを初期化
     this.setupThemeSelector();
 
-    // サンプル読み込みを初期化
-    this.setupSampleLoader();
-
     // JSONモーダルを初期化
     this.setupJsonModal();
 
@@ -229,34 +226,6 @@ class Editor {
   }
 
   /**
-   * サンプル読み込みを設定
-   */
-  setupSampleLoader() {
-    const sampleSelect = document.getElementById('sampleSelect');
-    const loadSampleBtn = document.getElementById('loadSampleBtn');
-
-    if (loadSampleBtn && sampleSelect) {
-      loadSampleBtn.addEventListener('click', async () => {
-        const sampleFile = sampleSelect.value;
-        if (!sampleFile) {
-          alert('サンプルを選択してください');
-          return;
-        }
-
-        try {
-          const response = await fetch(`samples/${sampleFile}`);
-          if (!response.ok) throw new Error('ファイルが見つかりません');
-
-          const jsonText = await response.text();
-          this.loadJson(jsonText);
-        } catch (error) {
-          alert(`サンプルの読み込みに失敗しました: ${error.message}`);
-        }
-      });
-    }
-  }
-
-  /**
    * JSONモーダルを設定
    */
   setupJsonModal() {
@@ -429,25 +398,6 @@ class Editor {
 
     if (fileInput) {
       fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
-    }
-
-    // サンプル選択を変更イベントで読み込み
-    const sampleSelect = document.getElementById('sampleSelect');
-    if (sampleSelect) {
-      sampleSelect.addEventListener('change', async (e) => {
-        const sampleFile = e.target.value;
-        if (!sampleFile) return;
-
-        try {
-          const response = await fetch(`samples/${sampleFile}`);
-          if (!response.ok) throw new Error('ファイルが見つかりません');
-          const jsonText = await response.text();
-          this.loadJson(jsonText);
-          sampleSelect.value = ''; // リセット
-        } catch (error) {
-          alert(`サンプルの読み込みに失敗しました: ${error.message}`);
-        }
-      });
     }
   }
 

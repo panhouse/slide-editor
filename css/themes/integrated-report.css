@@ -1,0 +1,794 @@
+/**
+ * 統合報告書テーマ (Integrated Report Theme)
+ * wills_ph3 base.css を忠実に再現したプロフェッショナルデザイン
+ */
+
+/* ========================================
+   CSS Variables - PDF準拠カラー（wills_ph3準拠）
+   ======================================== */
+[data-theme="integrated-report"] {
+  /* メインカラー（グレー/ブラウン系） */
+  --primary: #7B7B73;
+  --primary-dark: #5A5A54;
+  --primary-light: #9A9A92;
+  --primary-rgb: 123, 123, 115;
+
+  /* アクセント（重要キーワード用） */
+  --accent: #C84B31;
+  --accent-light: #E85D04;
+  --accent-rgb: 200, 75, 49;
+
+  /* ヘッダー・強調 */
+  --header-bg: #6B6B63;
+  --header-dark: #4A4A44;
+
+  /* テキスト */
+  --text-primary: #333333;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --text-light: #AAAAAA;
+
+  /* 背景 */
+  --bg-white: #FFFFFF;
+  --bg-light: #F8F8F6;
+  --bg-gray: #EEEEEC;
+  --bg-medium: #E0E0DC;
+  --slide-bg: #FFFFFF;
+
+  /* ボーダー */
+  --border-light: #E5E5E3;
+  --border-medium: #CCCCCA;
+  --border-dark: #999997;
+  --border-color: #E5E5E3;
+
+  /* チャート用カラー */
+  --chart-1: #7B7B73;
+  --chart-2: #9A9A92;
+  --chart-3: #B8B8B2;
+  --chart-4: #D6D6D2;
+  --chart-5: #C84B31;
+
+  /* ステータスカラー */
+  --success: #28A745;
+  --warning: #FFC107;
+  --danger: #DC3545;
+
+  /* シャドウ */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+  /* フォント */
+  --font-primary: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+  --font-heading: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+
+  /* フォントサイズ（統合報告書向け大きめ設定） */
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 18px;
+  --text-lg: 22px;
+  --text-xl: 28px;
+  --text-2xl: 36px;
+  --text-3xl: 44px;
+  --text-4xl: 56px;
+  --text-5xl: 72px;
+
+  /* 行間（読みやすさ重視） */
+  --leading-tight: 1.5;
+  --leading-normal: 1.7;
+  --leading-relaxed: 1.9;
+
+  /* スペーシング */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+}
+
+/* ========================================
+   Base Styles
+   ======================================== */
+[data-theme="integrated-report"] .slide {
+  background: var(--slide-bg);
+  font-family: var(--font-primary);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   Typography - PDF準拠
+   ======================================== */
+[data-theme="integrated-report"] .slide-heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-8);
+  letter-spacing: 0.05em;
+}
+
+[data-theme="integrated-report"] .subhead {
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--primary);
+  margin-bottom: var(--space-6);
+}
+
+/* ========================================
+   Title Slide
+   ======================================== */
+[data-theme="integrated-report"] .slide-title {
+  background: linear-gradient(135deg, #5A5A54 0%, #7B7B73 50%, #9A9A92 100%);
+}
+
+[data-theme="integrated-report"] .title-main,
+[data-theme="integrated-report"] .main-title {
+  color: var(--bg-white);
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="integrated-report"] .title-subtitle,
+[data-theme="integrated-report"] .main-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+[data-theme="integrated-report"] .title-date,
+[data-theme="integrated-report"] .meta-info {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+}
+
+/* ========================================
+   Content Slide
+   ======================================== */
+[data-theme="integrated-report"] .slide-content .slide-heading {
+  font-size: 40px;
+  padding-bottom: var(--space-4);
+  border-bottom: 3px solid var(--primary);
+  margin-bottom: var(--space-8);
+}
+
+[data-theme="integrated-report"] .bullet-list li {
+  font-size: 24px;
+  line-height: 1.8;
+  margin-bottom: var(--space-4);
+  padding-left: var(--space-8);
+  position: relative;
+}
+
+[data-theme="integrated-report"] .bullet-list li::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+/* ========================================
+   CEO Message - wills_ph3 準拠
+   ======================================== */
+[data-theme="integrated-report"] .slide-ceo-message {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* CEOレイアウト: 400px + 1fr のグリッド */
+[data-theme="integrated-report"] .ir-ceo-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: var(--space-8);
+  flex: 1;
+  min-height: 0;
+}
+
+/* CEO写真セクション */
+[data-theme="integrated-report"] .ir-ceo-photo {
+  position: relative;
+}
+
+[data-theme="integrated-report"] .ir-ceo-photo__img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+/* 写真下部のオーバーレイ名前ボックス */
+[data-theme="integrated-report"] .ir-ceo-photo__name-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: var(--space-4);
+}
+
+[data-theme="integrated-report"] .ir-ceo-photo__position {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .ir-ceo-photo__name {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+}
+
+/* CEOメッセージコンテンツ */
+[data-theme="integrated-report"] .ir-ceo-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 引用文スタイル（大きな引用符） */
+[data-theme="integrated-report"] .ir-ceo-quote {
+  font-size: var(--text-2xl);
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+  padding: var(--space-5);
+  position: relative;
+  line-height: var(--leading-relaxed);
+}
+
+[data-theme="integrated-report"] .ir-ceo-quote::before,
+[data-theme="integrated-report"] .ir-ceo-quote::after {
+  content: '"';
+  font-size: var(--text-5xl);
+  color: var(--text-light);
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+[data-theme="integrated-report"] .ir-ceo-quote::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+[data-theme="integrated-report"] .ir-ceo-quote::after {
+  content: '"';
+}
+
+/* セクション（2カラム） */
+[data-theme="integrated-report"] .ir-ceo-columns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  flex: 1;
+}
+
+[data-theme="integrated-report"] .ir-ceo-section__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-4);
+}
+
+[data-theme="integrated-report"] .ir-ceo-section__body {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  text-align: justify;
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   Philosophy (理念) - wills_ph3 準拠
+   ======================================== */
+[data-theme="integrated-report"] .slide-philosophy {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3カラムグリッド */
+[data-theme="integrated-report"] .ir-philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-8);
+  flex: 1;
+}
+
+/* アクセントボーダー付きカード */
+[data-theme="integrated-report"] .ir-card {
+  background: var(--bg-white);
+  padding: var(--space-5);
+}
+
+[data-theme="integrated-report"] .ir-card.accent-border {
+  border-left: 4px solid var(--primary);
+  background: var(--bg-light);
+}
+
+[data-theme="integrated-report"] .ir-card__icon {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-4);
+}
+
+[data-theme="integrated-report"] .ir-card__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-medium);
+}
+
+[data-theme="integrated-report"] .ir-card__body {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-secondary);
+  text-align: justify;
+}
+
+/* ========================================
+   Business Model - wills_ph3 準拠
+   ======================================== */
+[data-theme="integrated-report"] .slide-business-model {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ビジネスモデルレイアウト: 320px + 1fr + 320px */
+[data-theme="integrated-report"] .ir-bm-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 320px;
+  gap: var(--space-6);
+  flex: 1;
+  min-height: 0;
+}
+
+/* カラムタイトル（アクセント色） */
+[data-theme="integrated-report"] .ir-bm-column__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: var(--space-5);
+}
+
+/* アイテム（左ボーダーアクセント） */
+[data-theme="integrated-report"] .ir-bm-item {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--bg-light);
+  border-left: 4px solid var(--primary);
+}
+
+[data-theme="integrated-report"] .ir-bm-item__icon {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .ir-bm-item__title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-3);
+}
+
+[data-theme="integrated-report"] .ir-bm-item__desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+[data-theme="integrated-report"] .ir-bm-item__value {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* プロセス（中央、縦並び） */
+[data-theme="integrated-report"] .ir-bm-process {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="integrated-report"] .ir-bm-process-step {
+  background: var(--header-bg);
+  color: white;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: var(--space-2);
+  width: 100%;
+  max-width: 200px;
+}
+
+[data-theme="integrated-report"] .ir-bm-process-arrow {
+  font-size: var(--text-2xl);
+  color: var(--text-muted);
+  margin: var(--space-2) 0;
+}
+
+/* ========================================
+   Stat Cards (KPI表示) - wills_ph3 準拠
+   ======================================== */
+[data-theme="integrated-report"] .ir-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+/* 上部ボーダーアクセント付きカード */
+[data-theme="integrated-report"] .ir-stat-card {
+  text-align: center;
+  padding: var(--space-6);
+  background: var(--bg-light);
+  border-top: 4px solid var(--primary);
+}
+
+[data-theme="integrated-report"] .ir-stat-card__value {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+[data-theme="integrated-report"] .ir-stat-card__unit {
+  font-size: var(--text-base);
+  font-weight: 400;
+}
+
+[data-theme="integrated-report"] .ir-stat-card__label {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-top: var(--space-3);
+}
+
+[data-theme="integrated-report"] .ir-stat-card__change {
+  font-size: var(--text-sm);
+  margin-top: var(--space-2);
+}
+
+[data-theme="integrated-report"] .ir-stat-card__change.positive {
+  color: var(--accent);
+}
+
+/* ========================================
+   Icon Cards
+   ======================================== */
+[data-theme="integrated-report"] .icon-cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+}
+
+[data-theme="integrated-report"] .icon-cards-container .icon-card {
+  background: var(--bg-light);
+  padding: var(--space-6);
+  text-align: center;
+  border-top: 4px solid var(--primary);
+}
+
+[data-theme="integrated-report"] .icon-cards-container .icon-card-icon {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-4);
+}
+
+[data-theme="integrated-report"] .icon-cards-container .icon-card-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-3);
+}
+
+[data-theme="integrated-report"] .icon-cards-container .icon-card-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+/* ========================================
+   KPI Cards
+   ======================================== */
+[data-theme="integrated-report"] .kpi-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+[data-theme="integrated-report"] .kpi-container .kpi-card {
+  text-align: center;
+  padding: var(--space-6);
+  background: var(--bg-light);
+  border-top: 4px solid var(--primary);
+}
+
+[data-theme="integrated-report"] .kpi-container .kpi-icon {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-3);
+}
+
+[data-theme="integrated-report"] .kpi-container .kpi-value {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1;
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .kpi-container .kpi-label {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .kpi-container .kpi-desc {
+  font-size: var(--text-sm);
+  color: var(--accent);
+}
+
+/* ========================================
+   Process Flow
+   ======================================== */
+[data-theme="integrated-report"] .process-container .process-step {
+  background: var(--bg-light);
+  padding: var(--space-5);
+  text-align: center;
+  border-left: 4px solid var(--primary);
+}
+
+[data-theme="integrated-report"] .process-container .step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  color: var(--bg-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 auto var(--space-4);
+}
+
+[data-theme="integrated-report"] .process-container .step-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .process-container .step-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+[data-theme="integrated-report"] .process-container .process-arrow {
+  color: var(--primary);
+  font-size: var(--text-2xl);
+}
+
+/* ========================================
+   Timeline - 横型（PDF準拠）
+   ======================================== */
+[data-theme="integrated-report"] .timeline-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-5);
+  position: relative;
+  padding-top: var(--space-10);
+}
+
+[data-theme="integrated-report"] .timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+}
+
+[data-theme="integrated-report"] .timeline-item {
+  text-align: center;
+  position: relative;
+}
+
+[data-theme="integrated-report"] .timeline-item::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 50%;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+[data-theme="integrated-report"] .milestone-date {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .milestone-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+[data-theme="integrated-report"] .milestone-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  text-align: justify;
+}
+
+/* ========================================
+   Table - PDF準拠
+   ======================================== */
+[data-theme="integrated-report"] .table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-base);
+}
+
+[data-theme="integrated-report"] .table-container th {
+  background: var(--header-bg);
+  color: var(--bg-white);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  border: 1px solid var(--header-dark);
+}
+
+[data-theme="integrated-report"] .table-container td {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-medium);
+  text-align: center;
+}
+
+[data-theme="integrated-report"] .table-container tr:nth-child(even) td {
+  background: var(--bg-light);
+}
+
+/* ========================================
+   Compare
+   ======================================== */
+[data-theme="integrated-report"] .compare-container .compare-column {
+  background: var(--bg-light);
+  padding: var(--space-6);
+  border-left: 4px solid var(--text-muted);
+}
+
+[data-theme="integrated-report"] .compare-container .compare-column.compare-right {
+  border-left-color: var(--accent);
+}
+
+[data-theme="integrated-report"] .compare-container .compare-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 2px solid var(--primary);
+}
+
+/* ========================================
+   Quote
+   ======================================== */
+[data-theme="integrated-report"] .quote-container {
+  background: var(--bg-light);
+  border-left: 6px solid var(--accent);
+  padding: var(--space-8) var(--space-10);
+}
+
+[data-theme="integrated-report"] .quote-container .quote-text {
+  font-size: var(--text-2xl);
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: var(--leading-relaxed);
+}
+
+[data-theme="integrated-report"] .quote-container .quote-author {
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  margin-top: var(--space-6);
+}
+
+/* ========================================
+   Cards Grid
+   ======================================== */
+[data-theme="integrated-report"] .cards-container .card {
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="integrated-report"] .cards-container .card-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: var(--space-3);
+}
+
+[data-theme="integrated-report"] .cards-container .card-desc {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+
+/* ========================================
+   Highlight Text
+   ======================================== */
+[data-theme="integrated-report"] .highlight {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+[data-theme="integrated-report"] .highlight-box {
+  background: rgba(200, 75, 49, 0.1);
+  border-left: 4px solid var(--accent);
+  padding: var(--space-5) var(--space-6);
+}
+
+/* ========================================
+   Matrix Table
+   ======================================== */
+[data-theme="integrated-report"] .matrix-container th {
+  background: var(--bg-light);
+  font-weight: 600;
+  border: 1px solid var(--border-medium);
+}
+
+[data-theme="integrated-report"] .matrix-container .high {
+  background: rgba(200, 75, 49, 0.15);
+}
+
+[data-theme="integrated-report"] .matrix-container .medium {
+  background: rgba(255, 193, 7, 0.15);
+}
+
+[data-theme="integrated-report"] .matrix-container .low {
+  background: rgba(40, 167, 69, 0.15);
+}
+
+/* ========================================
+   Page Number / Footer
+   ======================================== */
+[data-theme="integrated-report"] .slide-footer {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   Utilities
+   ======================================== */
+[data-theme="integrated-report"] .text-accent {
+  color: var(--accent);
+}
+
+[data-theme="integrated-report"] .text-muted {
+  color: var(--text-muted);
+}
+
+[data-theme="integrated-report"] .font-bold {
+  font-weight: 700;
+}

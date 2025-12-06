@@ -34,7 +34,11 @@ class SlideRenderer {
       kpi: new KpiRenderer(),
       roadmap: new RoadmapRenderer(),
       quote: new QuoteRenderer(),
-      'icon-cards': new IconCardsRenderer()
+      'icon-cards': new IconCardsRenderer(),
+      // 統合報告書コンポーネント
+      philosophy: new PhilosophyRenderer(),
+      ceoMessage: new CeoMessageRenderer(),
+      businessModel: new BusinessModelRenderer()
     };
 
     // デフォルトレンダラー
@@ -161,7 +165,28 @@ class SlideRenderer {
       'iconCard': '.icon-card',
       'iconCardIcon': '.icon-card-icon',
       'iconCardTitle': '.icon-card-title',
-      'iconCardDesc': '.icon-card-desc'
+      'iconCardDesc': '.icon-card-desc',
+      // 統合報告書コンポーネント - wills_ph3 準拠クラス名
+      'philosophy': '.slide-philosophy',
+      'philosophyGrid': '.ir-philosophy-grid',
+      'irCard': '.ir-card',
+      'irCardIcon': '.ir-card__icon',
+      'irCardTitle': '.ir-card__title',
+      'irCardBody': '.ir-card__body',
+      'ceoMessage': '.slide-ceo-message',
+      'irCeoLayout': '.ir-ceo-layout',
+      'irCeoPhoto': '.ir-ceo-photo',
+      'irCeoQuote': '.ir-ceo-quote',
+      'irCeoColumns': '.ir-ceo-columns',
+      'irCeoSection': '.ir-ceo-section',
+      'businessModel': '.slide-business-model',
+      'irBmLayout': '.ir-bm-layout',
+      'irBmColumn': '.ir-bm-column',
+      'irBmItem': '.ir-bm-item',
+      'irBmProcess': '.ir-bm-process',
+      'irBmProcessStep': '.ir-bm-process-step',
+      'irStatGrid': '.ir-stat-grid',
+      'irStatCard': '.ir-stat-card'
     };
 
     Object.entries(layout).forEach(([key, pos]) => {
