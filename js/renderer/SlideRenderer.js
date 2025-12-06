@@ -34,11 +34,7 @@ class SlideRenderer {
       kpi: new KpiRenderer(),
       roadmap: new RoadmapRenderer(),
       quote: new QuoteRenderer(),
-      'icon-cards': new IconCardsRenderer(),
-      // 統合報告書コンポーネント
-      philosophy: new PhilosophyRenderer(),
-      ceoMessage: new CeoMessageRenderer(),
-      businessModel: new BusinessModelRenderer()
+      'icon-cards': new IconCardsRenderer()
     };
 
     // デフォルトレンダラー
