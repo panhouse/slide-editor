@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自動プレゼンテーション - TTS付き</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/slide.css?v=10">
+  <link rel="stylesheet" href="css/themes/panhouse.css">
+  <link rel="stylesheet" href="css/themes/consulting.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0a;
+      overflow: hidden;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .autoplay-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* スライド表示エリア */
+    .slide-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #000;
+    }
+
+    .slide-wrapper {
+      position: relative;
+    }
+
+    .slide-wrapper .slide {
+      width: 960px !important;
+      height: 540px !important;
+      transform-origin: center center;
+    }
+
+    /* コントロールバー */
+    .control-bar {
+      background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    body:hover .control-bar {
+      opacity: 1;
+    }
+
+    .control-bar.always-visible {
+      opacity: 1;
+    }
+
+    /* ボタン共通 */
+    .control-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .control-btn.primary {
+      background: #FF6B35;
+      border-color: #FF6B35;
+    }
+
+    .control-btn.primary:hover {
+      background: #e55a2b;
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* プログレスバー */
+    .progress-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #FF6B35;
+      transition: width 0.3s;
+    }
+
+    .slide-counter {
+      color: #fff;
+      font-size: 14px;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* スピーカーノート表示 */
+    .speaker-notes-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 400px;
+      max-height: 200px;
+      background: rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.3s;
+    }
+
+    .speaker-notes-panel.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .speaker-notes-panel h4 {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 読み上げ中ハイライト */
+    .speaking-indicator {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,107,53,0.9);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .speaking-indicator.active {
+      opacity: 1;
+    }
+
+    .speaking-indicator .wave {
+      display: flex;
+      gap: 2px;
+    }
+
+    .speaking-indicator .wave span {
+      display: block;
+      width: 3px;
+      height: 12px;
+      background: #fff;
+      border-radius: 2px;
+      animation: wave 0.8s ease-in-out infinite;
+    }
+
+    .speaking-indicator .wave span:nth-child(2) { animation-delay: 0.1s; }
+    .speaking-indicator .wave span:nth-child(3) { animation-delay: 0.2s; }
+    .speaking-indicator .wave span:nth-child(4) { animation-delay: 0.3s; }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.5); }
+      50% { transform: scaleY(1); }
+    }
+
+    /* ローディング画面 */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #0a0a0a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .loading-screen.hidden {
+      display: none;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255,107,53,0.3);
+      border-top-color: #FF6B35;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #888;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    /* TTS設定パネル */
+    .tts-settings {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+      min-width: 400px;
+      z-index: 1001;
+      display: none;
+    }
+
+    .tts-settings.visible {
+      display: block;
+    }
+
+    .tts-settings h3 {
+      color: #fff;
+      margin-bottom: 24px;
+      font-size: 20px;
+    }
+
+    .tts-settings label {
+      display: block;
+      color: #888;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .tts-settings select,
+    .tts-settings input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .tts-settings .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      display: none;
+    }
+
+    .overlay.visible {
+      display: block;
+    }
+
+    /* 開始前の画面 */
+    .start-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .start-screen.hidden {
+      display: none;
+    }
+
+    .start-screen h1 {
+      color: #fff;
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .start-screen p {
+      color: #888;
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+
+    .start-screen .slide-count {
+      color: #FF6B35;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- ローディング画面 -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">スライドを読み込み中...</div>
+  </div>
+
+  <!-- 開始前画面 -->
+  <div class="start-screen hidden" id="startScreen">
+    <div class="slide-count" id="slideCountInfo">全12枚のスライド</div>
+    <h1 id="presentationTitle">プレゼンテーション</h1>
+    <p>音声付きで自動再生します</p>
+    <button class="control-btn primary" onclick="startPresentation()" style="font-size: 18px; padding: 16px 48px;">
+      ▶ 再生開始
+    </button>
+  </div>
+
+  <!-- メインコンテナ -->
+  <div class="autoplay-container">
+    <div class="slide-area">
+      <div class="slide-wrapper" id="slideWrapper"></div>
+    </div>
+  </div>
+
+  <!-- コントロールバー -->
+  <div class="control-bar always-visible" id="controlBar">
+    <button class="control-btn" id="prevBtn" onclick="prevSlide()">◀ 前へ</button>
+    <button class="control-btn primary" id="playPauseBtn" onclick="togglePlayPause()">▶ 再生</button>
+    <button class="control-btn" id="nextBtn" onclick="nextSlide()">次へ ▶</button>
+
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar" onclick="seekSlide(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="slide-counter" id="slideCounter">1 / 1</div>
+    </div>
+
+    <button class="control-btn" onclick="toggleNotes()">📝 ノート</button>
+    <button class="control-btn" onclick="openSettings()">⚙️ 設定</button>
+    <button class="control-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
+  </div>
+
+  <!-- 読み上げインジケーター -->
+  <div class="speaking-indicator" id="speakingIndicator">
+    <div class="wave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    読み上げ中...
+  </div>
+
+  <!-- スピーカーノートパネル -->
+  <div class="speaker-notes-panel" id="notesPanel">
+    <h4>スピーカーノート</h4>
+    <div id="notesContent"></div>
+  </div>
+
+  <!-- TTS設定パネル -->
+  <div class="overlay" id="settingsOverlay"></div>
+  <div class="tts-settings" id="settingsPanel">
+    <h3>⚙️ 音声設定</h3>
+
+    <label>音声エンジン</label>
+    <select id="ttsEngine">
+      <option value="browser">ブラウザ内蔵 (無料)</option>
+      <option value="openai">OpenAI TTS (高品質・要API Key)</option>
+    </select>
+
+    <div id="openaiSettings" style="display: none;">
+      <label>OpenAI API Key</label>
+      <input type="text" id="openaiApiKey" placeholder="sk-...">
+
+      <label>音声</label>
+      <select id="openaiVoice">
+        <option value="onyx">Onyx (落ち着いた男性)</option>
+        <option value="echo">Echo (男性)</option>
+        <option value="alloy">Alloy (中性的)</option>
+        <option value="fable">Fable (男性・表現力)</option>
+        <option value="nova">Nova (女性)</option>
+        <option value="shimmer">Shimmer (女性)</option>
+      </select>
+    </div>
+
+    <div id="browserSettings">
+      <label>音声</label>
+      <select id="browserVoice"></select>
+
+      <label>速度: <span id="rateValue">1.0</span></label>
+      <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="1.0"
+             oninput="document.getElementById('rateValue').textContent = this.value">
+    </div>
+
+    <div class="btn-row">
+      <button class="control-btn" onclick="testVoice()">🔊 テスト</button>
+      <button class="control-btn" onclick="closeSettings()">キャンセル</button>
+      <button class="control-btn primary" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Renderers -->
+  <script src="js/renderer/types/BaseRenderer.js?v=10"></script>
+  <script src="js/renderer/types/TitleRenderer.js?v=10"></script>
+  <script src="js/renderer/types/ContentRenderer.js?v=10"></script>
+  <script src="js/renderer/types/IconCardsRenderer.js?v=10"></script>
+  <script src="js/renderer/types/CompareRenderer.js?v=10"></script>
+  <script src="js/renderer/types/ProcessRenderer.js?v=10"></script>
+  <script src="js/renderer/types/KpiRenderer.js?v=10"></script>
+  <script src="js/renderer/types/TableRenderer.js?v=10"></script>
+  <script src="js/renderer/types/TimelineRenderer.js?v=10"></script>
+  <script src="js/renderer/types/QuoteRenderer.js?v=10"></script>
+  <script src="js/renderer/types/ImageRenderer.js?v=10"></script>
+  <script src="js/renderer/types/TextRenderer.js?v=10"></script>
+  <script src="js/renderer/types/CardsRenderer.js?v=10"></script>
+  <script src="js/renderer/types/MatrixRenderer.js?v=10"></script>
+  <script src="js/renderer/types/RoadmapRenderer.js?v=10"></script>
+  <script src="js/renderer/SlideRenderer.js?v=10"></script>
+  <script src="js/core/JsonParser.js?v=10"></script>
+
+  <script>
+    // 状態管理
+    let slideData = null;
+    let currentSlide = 0;
+    let isPlaying = false;
+    let showNotes = false;
+    let ttsSettings = {
+      engine: 'browser',
+      openaiApiKey: '',
+      openaiVoice: 'onyx',
+      browserVoice: '',
+      rate: 1.0
+    };
+
+    // TTS関連
+    let speechSynth = window.speechSynthesis;
+    let currentUtterance = null;
+    let audioElement = null;
+
+    // 初期化
+    async function init() {
+      // URLパラメータからスライドIDを取得
+      const params = new URLSearchParams(window.location.search);
+      const slideId = params.get('id');
+      const dataParam = params.get('data');
+
+      if (dataParam) {
+        // data パラメータからJSONを読み込み
+        try {
+          slideData = JSON.parse(decodeURIComponent(dataParam));
+          showStartScreen();
+        } catch (e) {
+          showError('スライドデータの解析に失敗しました');
+        }
+      } else if (slideId) {
+        // Supabaseからスライドを取得
+        await loadSlideFromSupabase(slideId);
+      } else {
+        showError('スライドIDが指定されていません');
+      }
+
+      // 設定を読み込み
+      loadSettings();
+      initBrowserVoices();
+    }
+
+    async function loadSlideFromSupabase(slideId) {
+      try {
+        const SUPABASE_URL = 'https://fwykesvqriophaagunki.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ3eWtlc3ZxcmlvcGhhYWd1bmtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4MzcyNzgsImV4cCI6MjA4MDQxMzI3OH0.8gPGdAJ2b-hfqgtB_Cc_POWZ9vNs6X0lvST57-fDq9o';
+
+        const response = await fetch(
+          `${SUPABASE_URL}/rest/v1/slides?id=eq.${slideId}&select=*`,
+          {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          }
+        );
+
+        const data = await response.json();
+        if (data.length === 0) {
+          showError('スライドが見つかりません');
+          return;
+        }
+
+        slideData = typeof data[0].slide_json === 'string'
+          ? JSON.parse(data[0].slide_json)
+          : data[0].slide_json;
+
+        showStartScreen();
+      } catch (e) {
+        console.error('Error loading slide:', e);
+        showError('スライドの読み込みに失敗しました');
+      }
+    }
+
+    function showStartScreen() {
+      document.getElementById('loadingScreen').classList.add('hidden');
+      document.getElementById('startScreen').classList.remove('hidden');
+
+      const title = slideData.settings?.title || 'プレゼンテーション';
+      const slideCount = slideData.slides?.length || 0;
+
+      document.getElementById('presentationTitle').textContent = title;
+      document.getElementById('slideCountInfo').textContent = `全${slideCount}枚のスライド`;
+    }
+
+    function showError(message) {
+      document.getElementById('loadingScreen').innerHTML = `
+        <div style="color: #ff6b6b; font-size: 18px;">${message}</div>
+        <p style="color: #888; margin-top: 16px;">URLにスライドIDを指定してください</p>
+      `;
+    }
+
+    function startPresentation() {
+      document.getElementById('startScreen').classList.add('hidden');
+      renderCurrentSlide();
+      updateUI();
+    }
+
+    // スライドレンダリング
+    function renderCurrentSlide() {
+      if (!slideData || !slideData.slides) return;
+
+      const slide = slideData.slides[currentSlide];
+      const theme = slideData.settings?.theme || 'panhouse';
+
+      document.body.setAttribute('data-theme', theme);
+
+      const renderer = new SlideRenderer();
+      const html = renderer.render(slide, theme);
+
+      document.getElementById('slideWrapper').innerHTML = html;
+
+      // ノート更新
+      const notes = slide.speakerNotes || '(ノートなし)';
+      document.getElementById('notesContent').textContent = notes;
+
+      // スケール調整
+      requestAnimationFrame(scaleSlide);
+    }
+
+    function scaleSlide() {
+      const wrapper = document.getElementById('slideWrapper');
+      const slideEl = wrapper?.querySelector('.slide');
+      if (!slideEl) return;
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight - 80; // コントロールバー分
+      const slideWidth = 960;
+      const slideHeight = 540;
+
+      const scaleX = viewportWidth / slideWidth;
+      const scaleY = viewportHeight / slideHeight;
+      const scale = Math.min(scaleX, scaleY) * 0.9;
+
+      slideEl.style.transform = `scale(${scale})`;
+    }
+
+    // UI更新
+    function updateUI() {
+      const total = slideData?.slides?.length || 1;
+      document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${total}`;
+      document.getElementById('progressFill').style.width = `${((currentSlide + 1) / total) * 100}%`;
+
+      document.getElementById('prevBtn').disabled = currentSlide === 0;
+      document.getElementById('nextBtn').disabled = currentSlide >= total - 1;
+
+      document.getElementById('playPauseBtn').innerHTML = isPlaying ? '⏸ 一時停止' : '▶ 再生';
+    }
+
+    // ナビゲーション
+    function nextSlide() {
+      if (currentSlide < slideData.slides.length - 1) {
+        currentSlide++;
+        renderCurrentSlide();
+        updateUI();
+        if (isPlaying) speakCurrentNotes();
+      } else if (isPlaying) {
+        stopPlayback();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderCurrentSlide();
+        updateUI();
+        if (isPlaying) speakCurrentNotes();
+      }
+    }
+
+    function seekSlide(event) {
+      const bar = document.getElementById('progressBar');
+      const rect = bar.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const percent = x / rect.width;
+      currentSlide = Math.floor(percent * slideData.slides.length);
+      currentSlide = Math.max(0, Math.min(currentSlide, slideData.slides.length - 1));
+      renderCurrentSlide();
+      updateUI();
+    }
+
+    // 再生制御
+    function togglePlayPause() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
+      }
+    }
+
+    function startPlayback() {
+      isPlaying = true;
+      updateUI();
+      speakCurrentNotes();
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      updateUI();
+      stopSpeaking();
+    }
+
+    // TTS機能
+    function speakCurrentNotes() {
+      const slide = slideData.slides[currentSlide];
+      const notes = slide.speakerNotes;
+
+      if (!notes) {
+        // ノートがない場合は3秒後に次へ
+        setTimeout(() => {
+          if (isPlaying) nextSlide();
+        }, 3000);
+        return;
+      }
+
+      if (ttsSettings.engine === 'openai' && ttsSettings.openaiApiKey) {
+        speakWithOpenAI(notes);
+      } else {
+        speakWithBrowser(notes);
+      }
+    }
+
+    function speakWithBrowser(text) {
+      stopSpeaking();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'ja-JP';
+      utterance.rate = ttsSettings.rate;
+
+      // 音声設定
+      const voices = speechSynth.getVoices();
+      if (ttsSettings.browserVoice) {
+        const voice = voices.find(v => v.name === ttsSettings.browserVoice);
+        if (voice) utterance.voice = voice;
+      } else {
+        // 日本語の男性っぽい声を探す
+        const jpVoice = voices.find(v => v.lang.startsWith('ja')) || voices[0];
+        if (jpVoice) utterance.voice = jpVoice;
+      }
+
+      utterance.onstart = () => {
+        document.getElementById('speakingIndicator').classList.add('active');
+      };
+
+      utterance.onend = () => {
+        document.getElementById('speakingIndicator').classList.remove('active');
+        if (isPlaying) {
+          setTimeout(() => {
+            if (isPlaying) nextSlide();
+          }, 1000);
+        }
+      };
+
+      currentUtterance = utterance;
+      speechSynth.speak(utterance);
+    }
+
+    async function speakWithOpenAI(text) {
+      stopSpeaking();
+
+      document.getElementById('speakingIndicator').classList.add('active');
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${ttsSettings.openaiApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            model: 'tts-1',
+            input: text,
+            voice: ttsSettings.openaiVoice
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('OpenAI TTS API error');
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        audioElement = new Audio(url);
+        audioElement.playbackRate = ttsSettings.rate;
+
+        audioElement.onended = () => {
+          document.getElementById('speakingIndicator').classList.remove('active');
+          URL.revokeObjectURL(url);
+          if (isPlaying) {
+            setTimeout(() => {
+              if (isPlaying) nextSlide();
+            }, 1000);
+          }
+        };
+
+        audioElement.play();
+      } catch (e) {
+        console.error('OpenAI TTS error:', e);
+        document.getElementById('speakingIndicator').classList.remove('active');
+        // フォールバックでブラウザTTSを使用
+        speakWithBrowser(text);
+      }
+    }
+
+    function stopSpeaking() {
+      if (currentUtterance) {
+        speechSynth.cancel();
+        currentUtterance = null;
+      }
+      if (audioElement) {
+        audioElement.pause();
+        audioElement = null;
+      }
+      document.getElementById('speakingIndicator').classList.remove('active');
+    }
+
+    // ノート表示切り替え
+    function toggleNotes() {
+      showNotes = !showNotes;
+      document.getElementById('notesPanel').classList.toggle('visible', showNotes);
+    }
+
+    // 設定
+    function openSettings() {
+      document.getElementById('settingsOverlay').classList.add('visible');
+      document.getElementById('settingsPanel').classList.add('visible');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsOverlay').classList.remove('visible');
+      document.getElementById('settingsPanel').classList.remove('visible');
+    }
+
+    function saveSettings() {
+      ttsSettings.engine = document.getElementById('ttsEngine').value;
+      ttsSettings.openaiApiKey = document.getElementById('openaiApiKey').value;
+      ttsSettings.openaiVoice = document.getElementById('openaiVoice').value;
+      ttsSettings.browserVoice = document.getElementById('browserVoice').value;
+      ttsSettings.rate = parseFloat(document.getElementById('voiceRate').value);
+
+      localStorage.setItem('ttsSettings', JSON.stringify(ttsSettings));
+      closeSettings();
+    }
+
+    function loadSettings() {
+      const saved = localStorage.getItem('ttsSettings');
+      if (saved) {
+        ttsSettings = { ...ttsSettings, ...JSON.parse(saved) };
+        document.getElementById('ttsEngine').value = ttsSettings.engine;
+        document.getElementById('openaiApiKey').value = ttsSettings.openaiApiKey;
+        document.getElementById('openaiVoice').value = ttsSettings.openaiVoice;
+        document.getElementById('voiceRate').value = ttsSettings.rate;
+        document.getElementById('rateValue').textContent = ttsSettings.rate;
+      }
+      updateEngineUI();
+    }
+
+    function initBrowserVoices() {
+      const select = document.getElementById('browserVoice');
+
+      function populateVoices() {
+        const voices = speechSynth.getVoices();
+        select.innerHTML = '';
+
+        // 日本語の声を優先
+        const jpVoices = voices.filter(v => v.lang.startsWith('ja'));
+        const otherVoices = voices.filter(v => !v.lang.startsWith('ja'));
+
+        [...jpVoices, ...otherVoices].forEach(voice => {
+          const option = document.createElement('option');
+          option.value = voice.name;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          if (voice.name === ttsSettings.browserVoice) option.selected = true;
+          select.appendChild(option);
+        });
+      }
+
+      populateVoices();
+      speechSynth.onvoiceschanged = populateVoices;
+    }
+
+    // エンジン切り替えUI
+    document.getElementById('ttsEngine').addEventListener('change', updateEngineUI);
+
+    function updateEngineUI() {
+      const engine = document.getElementById('ttsEngine').value;
+      document.getElementById('openaiSettings').style.display = engine === 'openai' ? 'block' : 'none';
+      document.getElementById('browserSettings').style.display = engine === 'browser' ? 'block' : 'none';
+    }
+
+    function testVoice() {
+      const testText = 'これはテスト音声です。このように読み上げられます。';
+      ttsSettings.engine = document.getElementById('ttsEngine').value;
+      ttsSettings.openaiApiKey = document.getElementById('openaiApiKey').value;
+      ttsSettings.openaiVoice = document.getElementById('openaiVoice').value;
+      ttsSettings.browserVoice = document.getElementById('browserVoice').value;
+      ttsSettings.rate = parseFloat(document.getElementById('voiceRate').value);
+
+      if (ttsSettings.engine === 'openai' && ttsSettings.openaiApiKey) {
+        speakWithOpenAI(testText);
+      } else {
+        speakWithBrowser(testText);
+      }
+    }
+
+    // フルスクリーン
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // キーボードショートカット
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case ' ':
+          nextSlide();
+          break;
+        case 'ArrowLeft':
+          prevSlide();
+          break;
+        case 'f':
+        case 'F':
+          toggleFullscreen();
+          break;
+        case 'Escape':
+          stopPlayback();
+          break;
+      }
+    });
+
+    // リサイズ対応
+    window.addEventListener('resize', scaleSlide);
+
+    // 初期化実行
+    init();
+  </script>
+</body>
+</html>
