@@ -614,9 +614,12 @@
 
       document.body.setAttribute('data-theme', theme);
 
-      const html = window.SlideRenderer.render(slide, theme);
+      const element = window.SlideRenderer.render(slide, theme);
 
-      document.getElementById('slideWrapper').innerHTML = html;
+      // SlideRenderer.render() はHTMLElementを返すので、appendChildを使用
+      const wrapper = document.getElementById('slideWrapper');
+      wrapper.innerHTML = ''; // 既存の内容をクリア
+      wrapper.appendChild(element);
 
       // ノート更新
       const notes = slide.speakerNotes || '(ノートなし)';
