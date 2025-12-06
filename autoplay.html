@@ -175,34 +175,6 @@
       letter-spacing: 1px;
     }
 
-    /* 字幕表示（画面下部、ノートより上） */
-    .subtitles-panel {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      max-width: 900px;
-      background: rgba(0,0,0,0.85);
-      border-radius: 8px;
-      padding: 16px 24px;
-      color: #fff;
-      font-size: 22px;
-      line-height: 1.5;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.3s;
-      z-index: 99;
-    }
-
-    .subtitles-panel.visible {
-      opacity: 1;
-    }
-
-    .subtitles-panel.with-notes {
-      bottom: 230px;  /* ノートパネルがある場合は上に */
-    }
-
     /* 読み上げ中ハイライト */
     .speaking-indicator {
       position: fixed;
@@ -285,71 +257,6 @@
       font-size: 16px;
     }
 
-    /* TTS設定パネル */
-    .tts-settings {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #1a1a1a;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 32px;
-      min-width: 400px;
-      z-index: 1001;
-      display: none;
-    }
-
-    .tts-settings.visible {
-      display: block;
-    }
-
-    .tts-settings h3 {
-      color: #fff;
-      margin-bottom: 24px;
-      font-size: 20px;
-    }
-
-    .tts-settings label {
-      display: block;
-      color: #888;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .tts-settings select,
-    .tts-settings input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-
-    .tts-settings .btn-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 1000;
-      display: none;
-    }
-
-    .overlay.visible {
-      display: block;
-    }
-
     /* 開始前の画面 */
     .start-screen {
       position: fixed;
@@ -425,9 +332,7 @@
       <div class="slide-counter" id="slideCounter">1 / 1</div>
     </div>
 
-    <button class="control-btn" id="subtitlesBtn" onclick="toggleSubtitles()">💬 字幕</button>
     <button class="control-btn" onclick="toggleNotes()">📝 ノート</button>
-    <button class="control-btn" onclick="openSettings()">⚙️ 設定</button>
     <button class="control-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
   </div>
 
@@ -445,56 +350,6 @@
     <div id="notesContent"></div>
   </div>
 
-  <!-- 字幕パネル（音声が流せない場合用） -->
-  <div class="subtitles-panel" id="subtitlesPanel">
-    <div id="subtitlesContent"></div>
-  </div>
-
-  <!-- TTS設定パネル -->
-  <div class="overlay" id="settingsOverlay"></div>
-  <div class="tts-settings" id="settingsPanel">
-    <h3>⚙️ 音声設定</h3>
-
-    <label>音声エンジン</label>
-    <select id="ttsEngine">
-      <option value="browser">ブラウザ内蔵 (無料)</option>
-      <option value="openai">OpenAI TTS (高品質・要API Key)</option>
-    </select>
-
-    <div id="openaiSettings" style="display: none;">
-      <label>OpenAI API Key</label>
-      <input type="text" id="openaiApiKey" placeholder="sk-...">
-
-      <label>音声</label>
-      <select id="openaiVoice">
-        <option value="nova">Nova (女性・明るい) ★おすすめ</option>
-        <option value="alloy">Alloy (中性的・ナチュラル)</option>
-        <option value="shimmer">Shimmer (女性・柔らか)</option>
-        <option value="echo">Echo (男性・クリア)</option>
-        <option value="onyx">Onyx (男性・落ち着き)</option>
-        <option value="fable">Fable (男性・表現力)</option>
-      </select>
-
-      <label>速度: <span id="openaiRateValue">1.2</span></label>
-      <input type="range" id="openaiVoiceRate" min="0.8" max="1.5" step="0.1" value="1.2"
-             oninput="document.getElementById('openaiRateValue').textContent = this.value">
-    </div>
-
-    <div id="browserSettings">
-      <label>音声</label>
-      <select id="browserVoice"></select>
-
-      <label>速度: <span id="rateValue">1.0</span></label>
-      <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="1.0"
-             oninput="document.getElementById('rateValue').textContent = this.value">
-    </div>
-
-    <div class="btn-row">
-      <button class="control-btn" onclick="testVoice()">🔊 テスト</button>
-      <button class="control-btn" onclick="closeSettings()">キャンセル</button>
-      <button class="control-btn primary" onclick="saveSettings()">保存</button>
-    </div>
-  </div>
 
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -523,22 +378,20 @@
     let slideData = null;
     let currentSlide = 0;
     let isPlaying = false;
-    let showNotes = false;
-    let ttsSettings = {
-      engine: 'browser',
-      openaiApiKey: '',
-      openaiVoice: 'nova',  // 明るいトーンの音声
-      browserVoice: '',
-      rate: 1.2  // ちょっと早めに
+    let showNotes = true;  // デフォルトでノート表示
+
+    // TTS設定
+    const ttsSettings = {
+      voice: 'nova',  // OpenAI TTS voice: alloy, echo, fable, onyx, nova, shimmer
+      speed: 1.2      // 0.25〜4.0（1.2 = ちょっと早め）
     };
 
-    // 字幕モード
-    let subtitlesEnabled = false;
+    // TTS API エンドポイント（Railway上のプロキシ）
+    const TTS_API_URL = 'https://tldv-auto-proposal-production.up.railway.app/api/tts';
 
     // TTS関連
-    let speechSynth = window.speechSynthesis;
-    let currentUtterance = null;
     let audioElement = null;
+    let isAudioPlaying = false;
 
     // 初期化
     async function init() {
@@ -562,9 +415,8 @@
         showError('スライドIDが指定されていません');
       }
 
-      // 設定を読み込み
-      loadSettings();
-      initBrowserVoices();
+      // 初期状態でノートパネルを表示
+      document.getElementById('notesPanel').classList.add('visible');
     }
 
     async function loadSlideFromSupabase(slideId) {
@@ -668,9 +520,6 @@
       const notes = slide.speakerNotes || '(ノートなし)';
       document.getElementById('notesContent').textContent = notes;
 
-      // 字幕更新
-      updateSubtitles();
-
       // スケール調整
       requestAnimationFrame(scaleSlide);
     }
@@ -757,8 +606,8 @@
       stopSpeaking();
     }
 
-    // TTS機能
-    function speakCurrentNotes() {
+    // TTS機能（OpenAI TTS via Railway プロキシ）
+    async function speakCurrentNotes() {
       const slide = slideData.slides[currentSlide];
       const notes = slide.speakerNotes;
 
@@ -770,80 +619,47 @@
         return;
       }
 
-      if (ttsSettings.engine === 'openai' && ttsSettings.openaiApiKey) {
-        speakWithOpenAI(notes);
-      } else {
-        speakWithBrowser(notes);
-      }
-    }
-
-    function speakWithBrowser(text) {
       stopSpeaking();
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'ja-JP';
-      utterance.rate = ttsSettings.rate;
-
-      // 音声設定
-      const voices = speechSynth.getVoices();
-      if (ttsSettings.browserVoice) {
-        const voice = voices.find(v => v.name === ttsSettings.browserVoice);
-        if (voice) utterance.voice = voice;
-      } else {
-        // 日本語の男性っぽい声を探す
-        const jpVoice = voices.find(v => v.lang.startsWith('ja')) || voices[0];
-        if (jpVoice) utterance.voice = jpVoice;
-      }
-
-      utterance.onstart = () => {
-        document.getElementById('speakingIndicator').classList.add('active');
-      };
-
-      utterance.onend = () => {
-        document.getElementById('speakingIndicator').classList.remove('active');
-        if (isPlaying) {
-          setTimeout(() => {
-            if (isPlaying) nextSlide();
-          }, 1000);
-        }
-      };
-
-      currentUtterance = utterance;
-      speechSynth.speak(utterance);
-    }
-
-    async function speakWithOpenAI(text) {
-      stopSpeaking();
-
-      document.getElementById('speakingIndicator').classList.add('active');
 
       try {
-        const response = await fetch('https://api.openai.com/v1/audio/speech', {
+        // 読み上げインジケーター表示
+        document.getElementById('speakingIndicator').classList.add('active');
+        isAudioPlaying = true;
+
+        // OpenAI TTS APIを呼び出し
+        const response = await fetch(TTS_API_URL, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${ttsSettings.openaiApiKey}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'tts-1',
-            input: text,
-            voice: ttsSettings.openaiVoice
+            text: notes,
+            voice: ttsSettings.voice,
+            speed: ttsSettings.speed
           })
         });
 
         if (!response.ok) {
-          throw new Error('OpenAI TTS API error');
+          console.error('TTS API error:', response.status);
+          // エラー時はフォールバックとして次のスライドへ
+          document.getElementById('speakingIndicator').classList.remove('active');
+          if (isPlaying) {
+            setTimeout(() => { if (isPlaying) nextSlide(); }, 3000);
+          }
+          return;
         }
 
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+        // 音声データを取得してBlobに変換
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
 
-        audioElement = new Audio(url);
-        audioElement.playbackRate = ttsSettings.rate;
+        // Audio要素で再生
+        audioElement = new Audio(audioUrl);
 
         audioElement.onended = () => {
           document.getElementById('speakingIndicator').classList.remove('active');
-          URL.revokeObjectURL(url);
+          isAudioPlaying = false;
+          URL.revokeObjectURL(audioUrl);  // メモリ解放
           if (isPlaying) {
             setTimeout(() => {
               if (isPlaying) nextSlide();
@@ -851,24 +667,35 @@
           }
         };
 
+        audioElement.onerror = (e) => {
+          console.error('Audio playback error:', e);
+          document.getElementById('speakingIndicator').classList.remove('active');
+          isAudioPlaying = false;
+          if (isPlaying) {
+            setTimeout(() => { if (isPlaying) nextSlide(); }, 3000);
+          }
+        };
+
         audioElement.play();
-      } catch (e) {
-        console.error('OpenAI TTS error:', e);
+
+      } catch (error) {
+        console.error('TTS error:', error);
         document.getElementById('speakingIndicator').classList.remove('active');
-        // フォールバックでブラウザTTSを使用
-        speakWithBrowser(text);
+        isAudioPlaying = false;
+        // エラー時は3秒後に次のスライドへ
+        if (isPlaying) {
+          setTimeout(() => { if (isPlaying) nextSlide(); }, 3000);
+        }
       }
     }
 
     function stopSpeaking() {
-      if (currentUtterance) {
-        speechSynth.cancel();
-        currentUtterance = null;
-      }
       if (audioElement) {
         audioElement.pause();
+        audioElement.currentTime = 0;
         audioElement = null;
       }
+      isAudioPlaying = false;
       document.getElementById('speakingIndicator').classList.remove('active');
     }
 
@@ -876,139 +703,6 @@
     function toggleNotes() {
       showNotes = !showNotes;
       document.getElementById('notesPanel').classList.toggle('visible', showNotes);
-      // 字幕パネルの位置調整
-      document.getElementById('subtitlesPanel').classList.toggle('with-notes', showNotes && subtitlesEnabled);
-    }
-
-    // 字幕表示切り替え
-    function toggleSubtitles() {
-      subtitlesEnabled = !subtitlesEnabled;
-      const subtitlesPanel = document.getElementById('subtitlesPanel');
-      const subtitlesBtn = document.getElementById('subtitlesBtn');
-
-      subtitlesPanel.classList.toggle('visible', subtitlesEnabled);
-      subtitlesPanel.classList.toggle('with-notes', showNotes && subtitlesEnabled);
-      subtitlesBtn.style.background = subtitlesEnabled ? '#FF6B35' : '';
-
-      // 現在のスライドの字幕を更新
-      updateSubtitles();
-
-      // 設定を保存
-      localStorage.setItem('subtitlesEnabled', subtitlesEnabled);
-    }
-
-    // 字幕テキストを更新
-    function updateSubtitles() {
-      if (!subtitlesEnabled) return;
-
-      const slide = slideData?.slides?.[currentSlide];
-      const notes = slide?.speakerNotes || '';
-      document.getElementById('subtitlesContent').textContent = notes;
-    }
-
-    // 設定
-    function openSettings() {
-      document.getElementById('settingsOverlay').classList.add('visible');
-      document.getElementById('settingsPanel').classList.add('visible');
-    }
-
-    function closeSettings() {
-      document.getElementById('settingsOverlay').classList.remove('visible');
-      document.getElementById('settingsPanel').classList.remove('visible');
-    }
-
-    function saveSettings() {
-      ttsSettings.engine = document.getElementById('ttsEngine').value;
-      ttsSettings.openaiApiKey = document.getElementById('openaiApiKey').value;
-      ttsSettings.openaiVoice = document.getElementById('openaiVoice').value;
-      ttsSettings.browserVoice = document.getElementById('browserVoice').value;
-
-      // エンジンに応じて適切な速度スライダーから値を取得
-      if (ttsSettings.engine === 'openai') {
-        ttsSettings.rate = parseFloat(document.getElementById('openaiVoiceRate').value);
-      } else {
-        ttsSettings.rate = parseFloat(document.getElementById('voiceRate').value);
-      }
-
-      localStorage.setItem('ttsSettings', JSON.stringify(ttsSettings));
-      closeSettings();
-    }
-
-    function loadSettings() {
-      const saved = localStorage.getItem('ttsSettings');
-      if (saved) {
-        ttsSettings = { ...ttsSettings, ...JSON.parse(saved) };
-        document.getElementById('ttsEngine').value = ttsSettings.engine;
-        document.getElementById('openaiApiKey').value = ttsSettings.openaiApiKey;
-        document.getElementById('openaiVoice').value = ttsSettings.openaiVoice;
-        document.getElementById('openaiVoiceRate').value = ttsSettings.rate;
-        document.getElementById('openaiRateValue').textContent = ttsSettings.rate;
-        document.getElementById('voiceRate').value = ttsSettings.rate;
-        document.getElementById('rateValue').textContent = ttsSettings.rate;
-      }
-      updateEngineUI();
-
-      // 字幕の状態を復元
-      const savedSubtitles = localStorage.getItem('subtitlesEnabled');
-      if (savedSubtitles === 'true') {
-        subtitlesEnabled = true;
-        document.getElementById('subtitlesPanel').classList.add('visible');
-        document.getElementById('subtitlesBtn').style.background = '#FF6B35';
-      }
-    }
-
-    function initBrowserVoices() {
-      const select = document.getElementById('browserVoice');
-
-      function populateVoices() {
-        const voices = speechSynth.getVoices();
-        select.innerHTML = '';
-
-        // 日本語の声を優先
-        const jpVoices = voices.filter(v => v.lang.startsWith('ja'));
-        const otherVoices = voices.filter(v => !v.lang.startsWith('ja'));
-
-        [...jpVoices, ...otherVoices].forEach(voice => {
-          const option = document.createElement('option');
-          option.value = voice.name;
-          option.textContent = `${voice.name} (${voice.lang})`;
-          if (voice.name === ttsSettings.browserVoice) option.selected = true;
-          select.appendChild(option);
-        });
-      }
-
-      populateVoices();
-      speechSynth.onvoiceschanged = populateVoices;
-    }
-
-    // エンジン切り替えUI
-    document.getElementById('ttsEngine').addEventListener('change', updateEngineUI);
-
-    function updateEngineUI() {
-      const engine = document.getElementById('ttsEngine').value;
-      document.getElementById('openaiSettings').style.display = engine === 'openai' ? 'block' : 'none';
-      document.getElementById('browserSettings').style.display = engine === 'browser' ? 'block' : 'none';
-    }
-
-    function testVoice() {
-      const testText = 'これはテスト音声です。明るく、少し早めのペースで読み上げています。';
-      ttsSettings.engine = document.getElementById('ttsEngine').value;
-      ttsSettings.openaiApiKey = document.getElementById('openaiApiKey').value;
-      ttsSettings.openaiVoice = document.getElementById('openaiVoice').value;
-      ttsSettings.browserVoice = document.getElementById('browserVoice').value;
-
-      // エンジンに応じて適切な速度スライダーから値を取得
-      if (ttsSettings.engine === 'openai') {
-        ttsSettings.rate = parseFloat(document.getElementById('openaiVoiceRate').value);
-      } else {
-        ttsSettings.rate = parseFloat(document.getElementById('voiceRate').value);
-      }
-
-      if (ttsSettings.engine === 'openai' && ttsSettings.openaiApiKey) {
-        speakWithOpenAI(testText);
-      } else {
-        speakWithBrowser(testText);
-      }
     }
 
     // フルスクリーン
