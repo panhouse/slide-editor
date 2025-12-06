@@ -589,8 +589,7 @@
 
       document.body.setAttribute('data-theme', theme);
 
-      const renderer = new SlideRenderer();
-      const html = renderer.render(slide, theme);
+      const html = window.SlideRenderer.render(slide, theme);
 
       document.getElementById('slideWrapper').innerHTML = html;
 
