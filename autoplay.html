@@ -580,11 +580,36 @@
       updateUI();
     }
 
+    // スライドデータを正規化（フラット構造 → ネスト構造）
+    function normalizeSlideData(slide) {
+      // すでに data プロパティがある場合はそのまま返す
+      if (slide.data) return slide;
+
+      // フラット構造からネスト構造に変換
+      const normalized = {
+        type: slide.type,
+        id: slide.id,
+        speakerNotes: slide.speakerNotes,
+        data: {}
+      };
+
+      // タイプごとのプロパティをdataにコピー
+      const commonProps = ['type', 'id', 'speakerNotes'];
+      for (const key in slide) {
+        if (!commonProps.includes(key)) {
+          normalized.data[key] = slide[key];
+        }
+      }
+
+      return normalized;
+    }
+
     // スライドレンダリング
     function renderCurrentSlide() {
       if (!slideData || !slideData.slides) return;
 
-      const slide = slideData.slides[currentSlide];
+      const rawSlide = slideData.slides[currentSlide];
+      const slide = normalizeSlideData(rawSlide);
       const theme = slideData.settings?.theme || 'panhouse';
 
       document.body.setAttribute('data-theme', theme);
