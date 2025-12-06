@@ -383,7 +383,7 @@
     // TTS設定
     const ttsSettings = {
       voice: 'nova',  // OpenAI TTS voice: alloy, echo, fable, onyx, nova, shimmer
-      speed: 1.2      // 0.25〜4.0（1.2 = ちょっと早め）
+      speed: 1.3      // 0.25〜4.0（1.3 = 自然で聞きやすい速度）
     };
 
     // TTS API エンドポイント（Railway上のプロキシ）
@@ -392,6 +392,11 @@
     // TTS関連
     let audioElement = null;
     let isAudioPlaying = false;
+
+    // 音声キャッシュ（先読み用）
+    // Map<slideIndex, { audioUrl: string, blob: Blob }>
+    const audioCache = new Map();
+    let prefetchAbortController = null;
 
     // 初期化
     async function init() {
@@ -469,8 +474,25 @@
       `;
     }
 
-    function startPresentation() {
+    async function startPresentation() {
       document.getElementById('startScreen').classList.add('hidden');
+
+      // 最初のスライドの音声を事前生成（UX向上）
+      const firstSlide = slideData.slides[0];
+      if (firstSlide?.speakerNotes) {
+        // ローディング表示
+        document.getElementById('speakingIndicator').textContent = '🔄 音声を準備中...';
+        document.getElementById('speakingIndicator').classList.add('active');
+
+        await prefetchAudio(0);
+
+        document.getElementById('speakingIndicator').classList.remove('active');
+        document.getElementById('speakingIndicator').innerHTML = `
+          <div class="wave"><span></span><span></span><span></span><span></span></div>
+          読み上げ中...
+        `;
+      }
+
       renderCurrentSlide();
       updateUI();
     }
@@ -606,7 +628,64 @@
       stopSpeaking();
     }
 
-    // TTS機能（OpenAI TTS via Railway プロキシ）
+    // 音声を事前生成してキャッシュに保存
+    async function prefetchAudio(slideIndex) {
+      // すでにキャッシュにあればスキップ
+      if (audioCache.has(slideIndex)) {
+        console.log(`[TTS] スライド${slideIndex + 1}の音声はキャッシュ済み`);
+        return audioCache.get(slideIndex);
+      }
+
+      const slide = slideData.slides[slideIndex];
+      const notes = slide?.speakerNotes;
+
+      if (!notes) {
+        console.log(`[TTS] スライド${slideIndex + 1}にノートなし`);
+        return null;
+      }
+
+      try {
+        console.log(`[TTS] スライド${slideIndex + 1}の音声を生成中...`);
+
+        const response = await fetch(TTS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: notes,
+            voice: ttsSettings.voice,
+            speed: ttsSettings.speed
+          })
+        });
+
+        if (!response.ok) {
+          console.error(`[TTS] API error for slide ${slideIndex + 1}:`, response.status);
+          return null;
+        }
+
+        const blob = await response.blob();
+        const audioUrl = URL.createObjectURL(blob);
+        const cached = { audioUrl, blob };
+
+        audioCache.set(slideIndex, cached);
+        console.log(`[TTS] スライド${slideIndex + 1}の音声をキャッシュ完了`);
+
+        return cached;
+      } catch (error) {
+        console.error(`[TTS] Error fetching audio for slide ${slideIndex + 1}:`, error);
+        return null;
+      }
+    }
+
+    // 次のスライドの音声を裏で先読み
+    function prefetchNextSlide() {
+      const nextIndex = currentSlide + 1;
+      if (nextIndex < slideData.slides.length) {
+        // 非同期で先読み（待たない）
+        prefetchAudio(nextIndex);
+      }
+    }
+
+    // TTS機能（キャッシュ対応版）
     async function speakCurrentNotes() {
       const slide = slideData.slides[currentSlide];
       const notes = slide.speakerNotes;
@@ -616,6 +695,8 @@
         setTimeout(() => {
           if (isPlaying) nextSlide();
         }, 3000);
+        // ノートがなくても次のスライドは先読み
+        prefetchNextSlide();
         return;
       }
 
@@ -626,22 +707,15 @@
         document.getElementById('speakingIndicator').classList.add('active');
         isAudioPlaying = true;
 
-        // OpenAI TTS APIを呼び出し
-        const response = await fetch(TTS_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            text: notes,
-            voice: ttsSettings.voice,
-            speed: ttsSettings.speed
-          })
-        });
+        // キャッシュから取得、なければ生成を待つ
+        let cached = audioCache.get(currentSlide);
+        if (!cached) {
+          console.log(`[TTS] スライド${currentSlide + 1}のキャッシュなし、生成中...`);
+          cached = await prefetchAudio(currentSlide);
+        }
 
-        if (!response.ok) {
-          console.error('TTS API error:', response.status);
-          // エラー時はフォールバックとして次のスライドへ
+        if (!cached) {
+          // 生成失敗時はスキップ
           document.getElementById('speakingIndicator').classList.remove('active');
           if (isPlaying) {
             setTimeout(() => { if (isPlaying) nextSlide(); }, 3000);
@@ -649,17 +723,15 @@
           return;
         }
 
-        // 音声データを取得してBlobに変換
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
+        // 次のスライドを先読み開始
+        prefetchNextSlide();
 
         // Audio要素で再生
-        audioElement = new Audio(audioUrl);
+        audioElement = new Audio(cached.audioUrl);
 
         audioElement.onended = () => {
           document.getElementById('speakingIndicator').classList.remove('active');
           isAudioPlaying = false;
-          URL.revokeObjectURL(audioUrl);  // メモリ解放
           if (isPlaying) {
             setTimeout(() => {
               if (isPlaying) nextSlide();
@@ -682,7 +754,6 @@
         console.error('TTS error:', error);
         document.getElementById('speakingIndicator').classList.remove('active');
         isAudioPlaying = false;
-        // エラー時は3秒後に次のスライドへ
         if (isPlaying) {
           setTimeout(() => { if (isPlaying) nextSlide(); }, 3000);
         }
@@ -697,6 +768,17 @@
       }
       isAudioPlaying = false;
       document.getElementById('speakingIndicator').classList.remove('active');
+    }
+
+    // キャッシュをクリア（メモリ解放用）
+    function clearAudioCache() {
+      for (const [index, cached] of audioCache) {
+        if (cached.audioUrl) {
+          URL.revokeObjectURL(cached.audioUrl);
+        }
+      }
+      audioCache.clear();
+      console.log('[TTS] キャッシュをクリアしました');
     }
 
     // ノート表示切り替え
